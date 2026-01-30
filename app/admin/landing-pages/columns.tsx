@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
     DropdownMenu,
+    DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
@@ -18,6 +19,7 @@ import {
     deleteLandingPage,
 } from '@/app/actions/landing-pages'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export type LandingPage = {
     id: string
@@ -26,6 +28,44 @@ export type LandingPage = {
     is_published: boolean
     created_at: string
     updated_at: string
+}
+
+function StatusCell({ page }: { page: LandingPage }) {
+    const router = useRouter()
+    const isPublished = page.is_published
+
+    const handleStatusChange = async (published: boolean) => {
+        if (published) {
+            await publishLandingPage(page.id)
+        } else {
+            await unpublishLandingPage(page.id)
+        }
+        router.refresh()
+    }
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 p-0 hover:bg-transparent">
+                    {isPublished ? (
+                        <Badge variant="default" className="bg-green-500 hover:bg-green-600">
+                            Veröffentlicht
+                        </Badge>
+                    ) : (
+                        <Badge variant="secondary">Entwurf</Badge>
+                    )}
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+                <DropdownMenuCheckboxItem
+                    checked={isPublished}
+                    onCheckedChange={checked => handleStatusChange(checked)}
+                >
+                    Veröffentlicht
+                </DropdownMenuCheckboxItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    )
 }
 
 function ActionsCell({ page }: { page: LandingPage }) {
@@ -109,24 +149,19 @@ export const columns: ColumnDef<LandingPage>[] = [
         accessorKey: 'slug',
         header: 'Slug',
         cell: ({ row }) => (
-            <div className="font-mono text-sm text-muted-foreground">
+            <Link
+                href={`/landing-page/${row.getValue('slug')}`}
+                target="_blank"
+                className="font-mono text-sm text-blue-600 hover:underline"
+            >
                 /landing-page/{row.getValue('slug')}
-            </div>
+            </Link>
         ),
     },
     {
         accessorKey: 'is_published',
         header: 'Status',
-        cell: ({ row }) => {
-            const isPublished = row.getValue('is_published') as boolean
-            return isPublished ? (
-                <Badge variant="default" className="bg-green-500">
-                    Veröffentlicht
-                </Badge>
-            ) : (
-                <Badge variant="secondary">Entwurf</Badge>
-            )
-        },
+        cell: ({ row }) => <StatusCell page={row.original} />,
     },
     {
         accessorKey: 'created_at',

@@ -1,0 +1,33 @@
+name: Chalk
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      # Internal URL for Server-Side Rendering (Container -> Host)
+      - SUPABASE_INTERNAL_URL=http://host.docker.internal:54321
+      # We DO NOT override NEXT_PUBLIC_SUPABASE_URL here. 
+      # It will be picked up from .env.local (localhost:54321) and baked into the client bundle for the browser.
+    env_file:
+      - .env.local
+    networks:
+      - default
+      - supabase_network
+
+    # Polling is often required for hot-reload to work reliably across the Docker boundary on some systems,
+    # though on modern Docker Desktop for Mac file events might work.
+    # We set CHOKIDAR_USEPOLLING just in case, or configure next.config.ts if needed.
+    command: npm run dev
+
+networks:
+  supabase_network:
+    name: supabase_network_Chalk
+    external: true

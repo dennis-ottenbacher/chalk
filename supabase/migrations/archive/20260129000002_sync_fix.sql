@@ -1,0 +1,3 @@
+-- Placeholder to resolve migration version conflict
+-- The original 20260129000002 migration was split into 04, 05, and 07.
+-- This file exists to satisfy the migration history record.

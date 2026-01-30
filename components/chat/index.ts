@@ -1,0 +1,9 @@
+// Chat Components - Barrel Export
+export { ChatSidebar } from './ChatSidebar'
+export { ChannelHeader } from './ChannelHeader'
+export { MessageList } from './MessageList'
+export { MessageItem } from './MessageItem'
+export { MessageInput } from './MessageInput'
+export { ThreadPanel } from './ThreadPanel'
+export { ReactionPicker } from './ReactionPicker'
+export { CreateChannelModal } from './CreateChannelModal'

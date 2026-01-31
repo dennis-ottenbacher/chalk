@@ -123,6 +123,33 @@ export async function uploadChatAttachment(formData: FormData): Promise<ChatAtta
     }
 }
 
+// Helper to convert image URL to Base64 (only if necessary for localhost)
+async function fetchImageAsBase64(url: string): Promise<string> {
+    // Optimization: In production (public URLs), let OpenAI fetch the image directly.
+    // Only fetch and convert if it's a localhost URL which OpenAI cannot access.
+    const isLocal = url.includes('localhost') || url.includes('127.0.0.1')
+
+    if (!isLocal) {
+        return url
+    }
+
+    try {
+        // console.log(`Development mode: Converting local image to Base64 (${url})`)
+        const response = await fetch(url)
+        if (!response.ok) {
+            // console.warn(`Failed to fetch image: ${url}`)
+            return url
+        }
+        const arrayBuffer = await response.arrayBuffer()
+        const buffer = Buffer.from(arrayBuffer)
+        const contentType = response.headers.get('content-type') || 'image/jpeg'
+        return `data:${contentType};base64,${buffer.toString('base64')}`
+    } catch (e) {
+        console.error('Error converting image to base64:', e)
+        return url
+    }
+}
+
 export async function sendChalkMessage(content: string, imageUrls?: string[]) {
     const supabase = await createClient()
     const {
@@ -183,43 +210,53 @@ export async function sendChalkMessage(content: string, imageUrls?: string[]) {
         .limit(10)
 
     // Reverse to chronological order and build multimodal content
-    let messages: ChatMessage[] = history
-        ? history.reverse().map(m => {
-              const msgAttachments = (m.attachments as ChatAttachment[]) || []
-              const hasImages = msgAttachments.some(a => a.type.startsWith('image'))
+    let messages: ChatMessage[] = []
 
-              if (hasImages && m.sender_role === 'user') {
-                  // Build multimodal content for user messages with images
-                  const contentParts: Array<
-                      { type: 'text'; text: string } | { type: 'image'; image: string }
-                  > = [{ type: 'text', text: m.content }]
-                  msgAttachments
-                      .filter(a => a.type.startsWith('image'))
-                      .forEach(a => {
-                          contentParts.push({ type: 'image', image: a.url })
-                      })
-                  return {
-                      role: 'user' as const,
-                      content: contentParts,
-                  }
-              }
+    if (history) {
+        messages = await Promise.all(
+            history.reverse().map(async m => {
+                const msgAttachments = (m.attachments as ChatAttachment[]) || []
+                const hasImages = msgAttachments.some(a => a.type.startsWith('image'))
 
-              return {
-                  role: m.sender_role === 'user' ? 'user' : 'assistant',
-                  content: m.content,
-              } as ChatMessage
-          })
-        : []
+                if (hasImages && m.sender_role === 'user') {
+                    // Build multimodal content for user messages with images
+                    const imageParts = await Promise.all(
+                        msgAttachments
+                            .filter(a => a.type.startsWith('image'))
+                            .map(async a => ({
+                                type: 'image' as const,
+                                image: await fetchImageAsBase64(a.url),
+                            }))
+                    )
+
+                    return {
+                        role: 'user' as const,
+                        content: [{ type: 'text', text: m.content }, ...imageParts],
+                    }
+                }
+
+                return {
+                    role: m.sender_role === 'user' ? 'user' : 'assistant',
+                    content: m.content,
+                } as ChatMessage
+            })
+        )
+    }
 
     if (messages.length === 0) {
         if (imageUrls && imageUrls.length > 0) {
-            const contentParts: Array<
-                { type: 'text'; text: string } | { type: 'image'; image: string }
-            > = [{ type: 'text', text: content }]
-            imageUrls.forEach(url => {
-                contentParts.push({ type: 'image', image: url })
-            })
-            messages = [{ role: 'user', content: contentParts }]
+            const imageParts = await Promise.all(
+                imageUrls.map(async url => ({
+                    type: 'image' as const,
+                    image: await fetchImageAsBase64(url),
+                }))
+            )
+            messages = [
+                {
+                    role: 'user',
+                    content: [{ type: 'text', text: content }, ...imageParts],
+                },
+            ]
         } else {
             messages = [{ role: 'user', content }]
         }
@@ -227,6 +264,7 @@ export async function sendChalkMessage(content: string, imageUrls?: string[]) {
 
     // 4. Define Capabilities and Tools dynamically
     const capabilities = []
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const activeTools: Record<string, any> = {}
 
     // Capability: Knowledge Base (available to all with bot access)
@@ -240,7 +278,7 @@ export async function sendChalkMessage(content: string, imageUrls?: string[]) {
             query: z.string().describe('Suchbegriff oder Frage des Nutzers'),
         }),
         execute: async ({ query }) => {
-            console.log('Searching KB for:', query)
+            // console.log('Searching KB for:', query)
             try {
                 const { embedding } = await embed({
                     model: openai.embedding('text-embedding-3-small'),
@@ -517,14 +555,14 @@ Antworte dem Nutzer immer bestätigend.`
             tools: activeTools,
         })
 
-        console.log(
+        /* console.log(
             'AI Finished. Reason:',
             finishReason,
             'Steps:',
             steps?.length,
             'Text length:',
             text?.length
-        )
+        ) */
 
         // 6. Save AI Response
         const assistantText =

@@ -29,7 +29,7 @@ export default function CompanySettingsForm({ initialSettings }: CompanySettings
                 }
 
                 await updateSettings(settings)
-                console.log('Company information saved')
+                // console.log('Company information saved')
             } catch (error) {
                 console.error(error)
                 console.error('Failed to save company information')

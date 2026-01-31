@@ -138,13 +138,13 @@ export class FiskalyService {
             const response = await this.client.get(`/tss/${this.config.tssId}`)
             const state = response.data.state
 
-            console.log('[Fiskaly] TSS state:', state)
+            // console.log('[Fiskaly] TSS state:', state)
 
             // If TSS is CREATED, we need to initialize it
             if (state === 'CREATED') {
-                console.log('[Fiskaly] Initializing TSS...')
+                // console.log('[Fiskaly] Initializing TSS...')
                 await this.client.patch(`/tss/${this.config.tssId}`, { state: 'INITIALIZED' })
-                console.log('[Fiskaly] TSS initialized successfully')
+                // console.log('[Fiskaly] TSS initialized successfully')
             }
         } catch (error) {
             console.error('[Fiskaly] Failed to initialize TSS:', error)
@@ -160,7 +160,7 @@ export class FiskalyService {
             await this.client.put(`/tss/${this.config.tssId}/client/${this.config.clientId}`, {
                 serial_number: this.config.clientId,
             })
-            console.log('[Fiskaly] Client registered/verified')
+            // console.log('[Fiskaly] Client registered/verified')
         } catch (error) {
             console.error('[Fiskaly] Failed to register client:', error)
             throw new Error('Failed to register client')

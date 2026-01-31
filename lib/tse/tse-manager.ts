@@ -82,7 +82,7 @@ export class TseManager {
                 return false
             }
 
-            console.log('[TSE] Initialization complete')
+            // console.log('[TSE] Initialization complete')
             return true
         } catch (error) {
             console.error('[TSE] Failed to initialize TSE:', error)
@@ -112,10 +112,10 @@ export class TseManager {
         }
 
         try {
-            console.log('[TSE] Starting transaction:', transactionId)
+            // console.log('[TSE] Starting transaction:', transactionId)
             // Start transaction
             await this.fiskalyService.startTransaction(transactionId)
-            console.log('[TSE] Transaction started, finishing...')
+            // console.log('[TSE] Transaction started, finishing...')
 
             // Finish and get signature
             const signature = await this.fiskalyService.finishTransaction(
@@ -125,7 +125,7 @@ export class TseManager {
                 items
             )
 
-            console.log('[TSE] Transaction finished successfully')
+            // console.log('[TSE] Transaction finished successfully')
             return signature
         } catch (error) {
             console.error('[TSE] Failed to sign transaction:', error)
@@ -193,7 +193,7 @@ const tseManagers = new Map<string, TseManager>()
  */
 export function invalidateTseManager(organizationId: string) {
     tseManagers.delete(organizationId)
-    console.log(`TSE manager invalidated for organization: ${organizationId}`)
+    // console.log(`TSE manager invalidated for organization: ${organizationId}`)
 }
 
 /**

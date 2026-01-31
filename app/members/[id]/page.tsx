@@ -83,8 +83,8 @@ export default async function MemberDetailPage(props: { params: Promise<{ id: st
                                         className="flex justify-between items-center rounded-lg border p-3"
                                     >
                                         <div>
-                                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                             <p className="font-medium">
+                                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                                 {(sub.products as any)?.name}
                                             </p>
                                             <p className="text-xs text-muted-foreground">

@@ -169,12 +169,12 @@ export async function createTransaction(data: {
 
     // 2. Sign transaction with TSE (if enabled)
     try {
-        console.log('[TSE] Attempting to sign transaction:', transactionData.id)
+        // console.log('[TSE] Attempting to sign transaction:', transactionData.id)
         const { getTseManager } = await import('@/lib/tse/tse-manager')
         const tseManager = await getTseManager(organizationId)
 
         if (tseManager.isEnabled()) {
-            console.log('[TSE] Manager is enabled, signing...')
+            // console.log('[TSE] Manager is enabled, signing...')
             const tseSignature = await tseManager.signTransaction(
                 transactionData.id,
                 data.totalAmount,
@@ -195,18 +195,18 @@ export async function createTransaction(data: {
                     .update({ tse_data: tseSignature })
                     .eq('id', transactionData.id)
 
-                console.log(
+                /* console.log(
                     '[TSE] Transaction signed successfully:',
                     tseSignature.transaction_number
-                )
+                ) */
             } else {
                 console.warn('[TSE] Signing returned null (failed silently?)')
             }
         } else {
-            console.log(
+            /* console.log(
                 '[TSE] Manager is NOT enabled. Skipping signing. Config exists:',
                 !!tseManager.getConfig()
-            )
+            ) */
         }
     } catch (tseError) {
         // TSE errors should not prevent transaction completion

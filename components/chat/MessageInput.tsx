@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react'
 import { Send, Paperclip, X, Image as ImageIcon } from 'lucide-react'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -92,10 +93,14 @@ export function MessageInput({
                 <div className="flex flex-wrap gap-2 mb-3">
                     {attachments.map((file, index) => (
                         <div key={index} className="relative group">
-                            <img
+                            <Image
                                 src={URL.createObjectURL(file)}
                                 alt={file.name}
                                 className="h-20 w-20 object-cover rounded-lg border border-border"
+                                fill={false}
+                                width={80}
+                                height={80}
+                                unoptimized
                             />
                             <button
                                 className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"

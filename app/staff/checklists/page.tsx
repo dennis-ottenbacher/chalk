@@ -44,9 +44,9 @@ export default async function StaffChecklistsPage() {
     const checklists = shiftToShow ? await getShiftChecklists(shiftToShow.id) : []
 
     return (
-        <div className="flex flex-col h-full space-y-6 p-8">
+        <div className="flex flex-col h-full space-y-6 p-8 overflow-y-auto">
             <div>
-                <h2 className="text-3xl font-bold tracking-tight">Checklisten</h2>
+                <h1 className="text-3xl font-bold tracking-tight">Checklisten</h1>
                 <p className="text-muted-foreground">
                     {shiftToShow
                         ? `Schicht: ${new Date(shiftToShow.start_time).toLocaleDateString('de-DE')} (${shiftToShow.role})`

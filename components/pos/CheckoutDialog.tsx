@@ -207,7 +207,7 @@ export default function CheckoutDialog({ settings }: CheckoutDialogProps) {
                                     onClick={handleCheckVoucher}
                                     disabled={checkingVoucher || !voucherCode}
                                     size="lg"
-                                    className="h-12 bg-gray-900 text-white hover:bg-gray-800"
+                                    className="h-12"
                                 >
                                     {checkingVoucher ? (
                                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -220,17 +220,17 @@ export default function CheckoutDialog({ settings }: CheckoutDialogProps) {
 
                         {voucherResult && (
                             <div
-                                className={`p-4 rounded-lg border ${voucherResult.valid ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'} transition-all`}
+                                className={`p-4 rounded-lg border ${voucherResult.valid ? 'bg-success/10 border-success/30' : 'bg-destructive/10 border-destructive/30'} transition-all`}
                             >
                                 <div className="flex items-start gap-3">
                                     {voucherResult.valid ? (
-                                        <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5" />
+                                        <CheckCircle2 className="h-5 w-5 text-success mt-0.5" />
                                     ) : (
-                                        <XCircle className="h-5 w-5 text-red-600 mt-0.5" />
+                                        <XCircle className="h-5 w-5 text-destructive mt-0.5" />
                                     )}
                                     <div className="space-y-1 w-full">
                                         <p
-                                            className={`font-medium ${voucherResult.valid ? 'text-emerald-900' : 'text-red-900'}`}
+                                            className={`font-medium ${voucherResult.valid ? 'text-success' : 'text-destructive'}`}
                                         >
                                             {voucherResult.valid
                                                 ? 'Voucher Valid'
@@ -238,13 +238,13 @@ export default function CheckoutDialog({ settings }: CheckoutDialogProps) {
                                         </p>
                                         {voucherResult.message && (
                                             <p
-                                                className={`text-sm ${voucherResult.valid ? 'text-emerald-700' : 'text-red-700'}`}
+                                                className={`text-sm ${voucherResult.valid ? 'text-success/80' : 'text-destructive/80'}`}
                                             >
                                                 {voucherResult.message}
                                             </p>
                                         )}
                                         {voucherResult.valid && voucherResult.voucher && (
-                                            <div className="mt-2 text-sm text-emerald-800 flex flex-col gap-1 w-full">
+                                            <div className="mt-2 text-sm text-success flex flex-col gap-1 w-full">
                                                 <div className="flex justify-between w-full">
                                                     <span>Balance:</span>
                                                     <span className="font-mono font-bold">
@@ -258,10 +258,10 @@ export default function CheckoutDialog({ settings }: CheckoutDialogProps) {
                                                     <span>Cart Total:</span>
                                                     <span>€{total.toFixed(2)}</span>
                                                 </div>
-                                                <div className="border-t border-emerald-200 my-1 pt-1 flex justify-between w-full font-bold">
+                                                <div className="border-t border-success/30 my-1 pt-1 flex justify-between w-full font-bold">
                                                     <span>Remaining after:</span>
                                                     <span
-                                                        className={`${balance - total < 0 ? 'text-red-600' : 'text-emerald-700'}`}
+                                                        className={`${balance - total < 0 ? 'text-destructive' : 'text-success'}`}
                                                     >
                                                         {balance - total < 0
                                                             ? '€0.00'
@@ -269,7 +269,7 @@ export default function CheckoutDialog({ settings }: CheckoutDialogProps) {
                                                     </span>
                                                 </div>
                                                 {!sufficient && (
-                                                    <p className="text-emerald-700 font-bold mt-1 text-xs">
+                                                    <p className="text-success font-bold mt-1 text-xs">
                                                         Voucher will be applied as discount. Left to
                                                         pay: €{(total - balance).toFixed(2)}
                                                     </p>
@@ -292,8 +292,7 @@ export default function CheckoutDialog({ settings }: CheckoutDialogProps) {
                             Cancel
                         </Button>
                         <Button
-                            variant="outline"
-                            className="bg-green-600 hover:bg-green-700 text-white font-bold text-lg py-6"
+                            className="bg-success hover:bg-success/90 text-success-foreground font-bold text-lg py-6"
                             disabled={!voucherResult?.valid || !voucherResult?.voucher || isPending}
                             onClick={handleVoucherPay}
                         >
@@ -315,9 +314,9 @@ export default function CheckoutDialog({ settings }: CheckoutDialogProps) {
             <>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Payment Method</AlertDialogTitle>
-                    <AlertDialogDescription className="text-gray-500">
+                    <AlertDialogDescription className="text-muted-foreground">
                         Total Amount:{' '}
-                        <span className="text-emerald-600 font-bold">€{getTotal().toFixed(2)}</span>
+                        <span className="text-success font-bold">€{getTotal().toFixed(2)}</span>
                         <br />
                         Select how the member wants to pay.
                     </AlertDialogDescription>
@@ -325,47 +324,47 @@ export default function CheckoutDialog({ settings }: CheckoutDialogProps) {
                 <div className="grid grid-cols-1 gap-3 py-4">
                     <Button
                         variant="outline"
-                        className="h-16 text-lg border-gray-200 hover:bg-gray-100 hover:text-gray-900 flex items-center justify-start px-6 gap-3 shadow-sm"
+                        className="h-16 text-lg border-border hover:bg-muted hover:text-foreground flex items-center justify-start px-6 gap-3 shadow-sm"
                         onClick={() => handleCheckout('card')}
                         disabled={isPending}
                     >
                         {isPending ? (
                             <Loader2 className="h-6 w-6 animate-spin" />
                         ) : (
-                            <CreditCard className="h-6 w-6 text-blue-600" />
+                            <CreditCard className="h-6 w-6 text-info" />
                         )}
                         <span>Card (Terminal)</span>
                     </Button>
                     <Button
                         variant="outline"
-                        className="h-16 text-lg border-gray-200 hover:bg-gray-100 hover:text-gray-900 flex items-center justify-start px-6 gap-3 shadow-sm"
+                        className="h-16 text-lg border-border hover:bg-muted hover:text-foreground flex items-center justify-start px-6 gap-3 shadow-sm"
                         onClick={() => handleCheckout('cash')}
                         disabled={isPending}
                     >
                         {isPending ? (
                             <Loader2 className="h-6 w-6 animate-spin" />
                         ) : (
-                            <Banknote className="h-6 w-6 text-emerald-600" />
+                            <Banknote className="h-6 w-6 text-success" />
                         )}
                         <span>Cash</span>
                     </Button>
                     <Button
                         variant="outline"
-                        className="h-16 text-lg border-gray-200 hover:bg-purple-50 hover:text-purple-900 hover:border-purple-200 flex items-center justify-start px-6 gap-3 shadow-sm text-purple-700"
+                        className="h-16 text-lg border-border hover:bg-primary/10 hover:text-primary hover:border-primary/30 flex items-center justify-start px-6 gap-3 shadow-sm text-primary"
                         onClick={() => setPaymentMode('voucher')}
                         disabled={isPending}
                     >
                         {isPending ? (
                             <Loader2 className="h-6 w-6 animate-spin" />
                         ) : (
-                            <Ticket className="h-6 w-6 text-purple-600" />
+                            <Ticket className="h-6 w-6 text-primary" />
                         )}
                         <span>Voucher Code</span>
                     </Button>
                 </div>
                 <AlertDialogFooter>
                     <AlertDialogCancel
-                        className="bg-gray-100 text-gray-900 hover:bg-gray-200 border-gray-200"
+                        className="bg-muted text-foreground hover:bg-accent border-border"
                         disabled={isPending}
                     >
                         Cancel
@@ -379,49 +378,43 @@ export default function CheckoutDialog({ settings }: CheckoutDialogProps) {
         return (
             <div className="w-full space-y-2">
                 {missingMember && (
-                    <p className="text-red-400 text-sm text-center font-bold animate-pulse">
+                    <p className="text-warning text-sm text-center font-bold animate-pulse">
                         ⚠️ Subscription Plan requires a Customer!
                     </p>
                 )}
                 <div className="grid grid-cols-2 gap-3">
+                    {/* POS: Large touch targets h-20 */}
                     <Button
                         variant="outline"
-                        className="h-20 flex flex-col items-center justify-center gap-1 border-gray-200 bg-white hover:bg-emerald-50 hover:border-emerald-500 hover:text-emerald-600 text-gray-700 transition-all shadow-sm"
+                        className="h-20 flex flex-col items-center justify-center gap-1 border-border bg-card hover:bg-success/10 hover:border-success hover:text-success text-foreground transition-all shadow-sm"
                         onClick={() => handleCheckout('cash')}
                         disabled={disabled || isPending}
                     >
                         {isPending ? (
                             <Loader2 className="h-6 w-6 animate-spin" />
                         ) : (
-                            <Banknote className="h-8 w-8 text-emerald-600" />
+                            <Banknote className="h-8 w-8 text-success" />
                         )}
                         <span className="font-bold">Cash</span>
                     </Button>
                     <Button
                         variant="outline"
-                        className="h-20 flex flex-col items-center justify-center gap-1 border-gray-200 bg-white hover:bg-blue-50 hover:border-blue-500 hover:text-blue-600 text-gray-700 transition-all shadow-sm"
+                        className="h-20 flex flex-col items-center justify-center gap-1 border-border bg-card hover:bg-info/10 hover:border-info hover:text-info text-foreground transition-all shadow-sm"
                         onClick={() => handleCheckout('card')}
                         disabled={disabled || isPending}
                     >
                         {isPending ? (
                             <Loader2 className="h-6 w-6 animate-spin" />
                         ) : (
-                            <CreditCard className="h-8 w-8 text-blue-600" />
+                            <CreditCard className="h-8 w-8 text-info" />
                         )}
                         <span className="font-bold">Card</span>
                     </Button>
                 </div>
-                {/* Direct Checkout doesn't support Voucher dialog flow easily without opening the dialog anyway. 
-                    So we probably should add a Voucher button here too that OPENS the dialog? 
-                    For now, I'll leave Direct Checkout as is for Cash/Card and rely on the Main Checkout Button for special flows, 
-                    OR add a small "More..." or "Voucher" button here.
-                    The requirement implies standard POS flow. 
-                    I'll add a full width Voucher button below functionality if Direct Checkout is ON. 
-                 */}
                 <Button
                     variant="ghost"
-                    className="w-full text-purple-600 hover:text-purple-700 hover:bg-purple-50"
-                    onClick={() => setIsOpen(true)} // Open main dialog for Voucher
+                    className="w-full text-primary hover:text-primary hover:bg-primary/10"
+                    onClick={() => setIsOpen(true)}
                     disabled={disabled || isPending}
                 >
                     <Ticket className="w-4 h-4 mr-2" />
@@ -429,16 +422,13 @@ export default function CheckoutDialog({ settings }: CheckoutDialogProps) {
                 </Button>
 
                 <div className="flex justify-between items-center px-1">
-                    <span className="text-sm text-gray-500 font-medium">Total to pay</span>
-                    <span className="text-xl font-bold text-emerald-600">
-                        €{getTotal().toFixed(2)}
-                    </span>
+                    <span className="text-sm text-muted-foreground font-medium">Total to pay</span>
+                    <span className="text-xl font-bold text-success">€{getTotal().toFixed(2)}</span>
                 </div>
 
                 {/* Hidden Dialog for Voucher Flow when triggered */}
                 <AlertDialog open={isOpen} onOpenChange={handleOpenChange}>
-                    <AlertDialogContent className="bg-white border-gray-200 text-gray-900 shadow-xl sm:max-w-md transition-all duration-200">
-                        {/* Reuse the dialog content logic below */}
+                    <AlertDialogContent className="bg-card border-border text-foreground shadow-xl sm:max-w-md transition-all duration-200">
                         {renderDialogContent()}
                     </AlertDialogContent>
                 </AlertDialog>
@@ -449,20 +439,20 @@ export default function CheckoutDialog({ settings }: CheckoutDialogProps) {
     return (
         <div className="w-full">
             {missingMember && (
-                <p className="text-red-400 text-sm mb-2 text-center font-bold">
+                <p className="text-warning text-sm mb-2 text-center font-bold">
                     ⚠️ Subscription Plan requires a Customer!
                 </p>
             )}
             <AlertDialog open={isOpen} onOpenChange={handleOpenChange}>
                 <AlertDialogTrigger asChild>
                     <Button
-                        className="w-full bg-green-600 hover:bg-green-700 text-white font-bold text-lg py-6"
+                        className="w-full bg-success hover:bg-success/90 text-success-foreground font-bold text-lg py-6"
                         disabled={disabled}
                     >
                         Checkout €{getTotal().toFixed(2)}
                     </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent className="bg-white border-gray-200 text-gray-900 shadow-xl sm:max-w-md transition-all duration-200">
+                <AlertDialogContent className="bg-card border-border text-foreground shadow-xl sm:max-w-md transition-all duration-200">
                     {renderDialogContent()}
                 </AlertDialogContent>
             </AlertDialog>

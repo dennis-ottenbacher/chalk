@@ -66,10 +66,12 @@ export function CreateChannelModal({ isOpen, onClose, onCreate }: CreateChannelM
             <div className="absolute inset-0 bg-black/50" onClick={handleClose} />
 
             {/* Modal */}
-            <div className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden">
+            <div className="relative bg-card rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden border border-border">
                 {/* Header */}
-                <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-                    <h2 className="text-lg font-semibold text-gray-900">Neuen Channel erstellen</h2>
+                <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+                    <h2 className="text-lg font-semibold text-foreground">
+                        Neuen Channel erstellen
+                    </h2>
                     <Button variant="ghost" size="sm" onClick={handleClose}>
                         <X className="h-4 w-4" />
                     </Button>
@@ -81,7 +83,7 @@ export function CreateChannelModal({ isOpen, onClose, onCreate }: CreateChannelM
                     <div className="space-y-2">
                         <Label htmlFor="channel-name">Name</Label>
                         <div className="relative">
-                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                                 {isPrivate ? (
                                     <Lock className="h-4 w-4" />
                                 ) : (
@@ -98,7 +100,7 @@ export function CreateChannelModal({ isOpen, onClose, onCreate }: CreateChannelM
                             />
                         </div>
                         {formattedName && formattedName !== name.toLowerCase() && (
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-muted-foreground">
                                 Wird zu: <span className="font-medium">#{formattedName}</span>
                             </p>
                         )}
@@ -107,7 +109,7 @@ export function CreateChannelModal({ isOpen, onClose, onCreate }: CreateChannelM
                     {/* Description Input */}
                     <div className="space-y-2">
                         <Label htmlFor="channel-description">
-                            Beschreibung <span className="text-gray-400">(optional)</span>
+                            Beschreibung <span className="text-muted-foreground">(optional)</span>
                         </Label>
                         <Input
                             id="channel-description"
@@ -123,7 +125,7 @@ export function CreateChannelModal({ isOpen, onClose, onCreate }: CreateChannelM
                             <Label htmlFor="private-toggle" className="cursor-pointer">
                                 Privater Channel
                             </Label>
-                            <p className="text-xs text-gray-500 mt-0.5">
+                            <p className="text-xs text-muted-foreground mt-0.5">
                                 Nur eingeladene Mitglieder können beitreten
                             </p>
                         </div>
@@ -136,7 +138,7 @@ export function CreateChannelModal({ isOpen, onClose, onCreate }: CreateChannelM
 
                     {/* Error */}
                     {error && (
-                        <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">
+                        <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-lg">
                             {error}
                         </p>
                     )}

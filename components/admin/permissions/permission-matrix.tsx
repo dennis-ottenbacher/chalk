@@ -135,6 +135,21 @@ const permissionStructure: PermissionCategory[] = [
                 name: 'View Knowledge Base',
                 description: 'Bot can read internal documentation',
             },
+            {
+                key: 'chalk_bot.manage_checklists',
+                name: 'Manage Checklists',
+                description: 'Bot can create checklist templates',
+            },
+        ],
+    },
+    {
+        category: 'Content Management',
+        permissions: [
+            {
+                key: 'landing_pages.preview',
+                name: 'Preview Landing Pages',
+                description: 'View unpublished Landing Pages',
+            },
         ],
     },
 ]
@@ -151,6 +166,7 @@ export function PermissionMatrix({ initialPermissions }: { initialPermissions: R
     const [permissions, setPermissions] = useState<RolePermission[]>(initialPermissions)
 
     const getAccess = (role: string, key: string) => {
+        if (role === 'admin') return 'true'
         const found = permissions.find(p => p.role === role && p.permission_key === key)
         return found?.access_level || 'false'
     }
@@ -179,7 +195,7 @@ export function PermissionMatrix({ initialPermissions }: { initialPermissions: R
     }
 
     return (
-        <div className="rounded-md border bg-white shadow-sm">
+        <div className="rounded-md border border-border bg-card shadow-sm">
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -194,10 +210,10 @@ export function PermissionMatrix({ initialPermissions }: { initialPermissions: R
                 <TableBody>
                     {permissionStructure.map(category => (
                         <Fragment key={category.category}>
-                            <TableRow className="bg-gray-50 hover:bg-gray-50">
+                            <TableRow className="bg-muted hover:bg-muted">
                                 <TableCell
                                     colSpan={roles.length + 1}
-                                    className="py-2 font-semibold text-gray-700"
+                                    className="py-2 font-semibold text-foreground"
                                 >
                                     {category.category}
                                 </TableCell>
@@ -207,7 +223,7 @@ export function PermissionMatrix({ initialPermissions }: { initialPermissions: R
                                     <TableCell>
                                         <div className="flex flex-col">
                                             <span className="font-medium">{item.name}</span>
-                                            <span className="text-xs text-gray-500">
+                                            <span className="text-xs text-muted-foreground">
                                                 {item.description}
                                             </span>
                                         </div>
@@ -251,7 +267,7 @@ function AccessSelect({
 }) {
     if (disabled && value === 'true') {
         return (
-            <div className="flex justify-center text-gray-400">
+            <div className="flex justify-center text-muted-foreground">
                 <Check className="h-5 w-5" />
             </div>
         )
@@ -264,21 +280,21 @@ function AccessSelect({
                 value={value}
                 onChange={e => onChange(e.target.value)}
                 disabled={disabled}
-                className="h-9 w-full appearance-none rounded-md border border-gray-200 bg-white pl-9 pr-8 py-1 text-sm text-gray-700 shadow-sm transition-all hover:bg-gray-50 focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400"
+                className="h-9 w-full appearance-none rounded-md border border-border bg-card pl-9 pr-8 py-1 text-sm text-foreground shadow-sm transition-all hover:bg-muted focus:border-border focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
             >
                 <option value="true">Allowed</option>
                 <option value="false">Denied</option>
                 <option value="own">Own Data</option>
             </select>
-            <div className="pointer-events-none absolute right-2 top-2.5 text-gray-400">
+            <div className="pointer-events-none absolute right-2 top-2.5 text-muted-foreground">
                 <ChevronDown className="h-4 w-4" />
             </div>
 
             {/* Visual Indicator Overlay */}
             <div className="pointer-events-none absolute left-2.5 top-2.5">
-                {value === 'true' && <Check className="h-4 w-4 text-green-500" />}
-                {value === 'false' && <X className="h-4 w-4 text-red-500" />}
-                {value === 'own' && <Shield className="h-4 w-4 text-blue-500" />}
+                {value === 'true' && <Check className="h-4 w-4 text-success" />}
+                {value === 'false' && <X className="h-4 w-4 text-destructive" />}
+                {value === 'own' && <Shield className="h-4 w-4 text-info" />}
             </div>
         </div>
     )

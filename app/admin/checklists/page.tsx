@@ -9,14 +9,9 @@ export default async function ChecklistsPage() {
     const templates = await getChecklistTemplates()
 
     return (
-        <div className="flex flex-col h-full space-y-6 p-8">
+        <div className="space-y-6">
             <div className="flex items-center justify-between">
-                <div>
-                    <h2 className="text-3xl font-bold tracking-tight">Checklisten</h2>
-                    <p className="text-muted-foreground">
-                        Checklisten-Vorlagen erstellen und verwalten
-                    </p>
-                </div>
+                <h1 className="text-3xl font-bold tracking-tight">Checklisten</h1>
                 <Link href="/admin/checklists/new">
                     <Button>
                         <Plus className="mr-2 h-4 w-4" />

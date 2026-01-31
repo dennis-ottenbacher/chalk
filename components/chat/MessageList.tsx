@@ -51,8 +51,8 @@ export function MessageList({
     if (isLoading) {
         return (
             <div className="flex-1 flex items-center justify-center">
-                <div className="flex flex-col items-center gap-2 text-gray-500">
-                    <div className="w-8 h-8 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin" />
+                <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                    <div className="w-8 h-8 border-2 border-border border-t-primary rounded-full animate-spin" />
                     <span className="text-sm">Lade Nachrichten...</span>
                 </div>
             </div>
@@ -62,7 +62,7 @@ export function MessageList({
     if (messages.length === 0) {
         return (
             <div className="flex-1 flex items-center justify-center">
-                <div className="text-center text-gray-500">
+                <div className="text-center text-muted-foreground">
                     <p className="text-lg font-medium">Noch keine Nachrichten</p>
                     <p className="text-sm">Sei der Erste, der etwas schreibt!</p>
                 </div>
@@ -76,15 +76,15 @@ export function MessageList({
                 <div key={date}>
                     {/* Date Separator */}
                     <div className="flex items-center gap-4 my-4">
-                        <div className="flex-1 h-px bg-gray-200" />
-                        <span className="text-xs text-gray-500 font-medium px-2 py-1 bg-gray-100 rounded-full">
+                        <div className="flex-1 h-px bg-border" />
+                        <span className="text-xs text-muted-foreground font-medium px-2 py-1 bg-muted rounded-full">
                             {date}
                         </span>
-                        <div className="flex-1 h-px bg-gray-200" />
+                        <div className="flex-1 h-px bg-border" />
                     </div>
 
                     {/* Messages */}
-                    <div className="space-y-1">
+                    <div className="space-y-2">
                         {dateMessages.map((message, index) => {
                             const prevMessage = dateMessages[index - 1]
                             const showAuthor =

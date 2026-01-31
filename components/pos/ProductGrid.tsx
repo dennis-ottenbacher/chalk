@@ -34,24 +34,24 @@ export default function ProductGrid({ products }: ProductGridProps) {
     ]
 
     return (
-        <div className="flex flex-col h-full gap-4 p-4 text-gray-900">
+        <div className="flex flex-col h-full gap-4 p-4 text-foreground">
             {/* Search and Filters */}
-            <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+            <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-card p-4 rounded-lg border border-border shadow-sm">
                 <div className="relative w-full md:w-1/3">
-                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
+                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
                         placeholder="Search products..."
-                        className="pl-8 bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-500"
+                        className="pl-8 bg-muted border-border text-foreground placeholder:text-muted-foreground"
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
                     />
                 </div>
-                <div className="flex gap-2 bg-gray-50 p-1 rounded-md overflow-x-auto max-w-full border border-gray-200">
+                <div className="flex gap-2 bg-muted p-1 rounded-md overflow-x-auto max-w-full border border-border">
                     {categories.map(cat => (
                         <Button
                             key={cat.value}
                             variant={selectedCategory === cat.value ? 'secondary' : 'ghost'}
-                            className={`${selectedCategory === cat.value ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200'} whitespace-nowrap`}
+                            className={`${selectedCategory === cat.value ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground hover:bg-accent'} whitespace-nowrap`}
                             onClick={() => setSelectedCategory(cat.value)}
                             size="sm"
                         >
@@ -67,7 +67,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
                     <ProductCard key={product.id} product={product} />
                 ))}
                 {filteredProducts.length === 0 && (
-                    <div className="col-span-full text-center text-gray-400 py-10">
+                    <div className="col-span-full text-center text-muted-foreground py-10">
                         No products found.
                     </div>
                 )}

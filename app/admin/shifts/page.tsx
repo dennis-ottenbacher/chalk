@@ -54,10 +54,10 @@ export default async function ShiftsPage({
     const staffEvents = await getStaffEvents(startDate.toISOString(), endDate.toISOString())
 
     return (
-        <div className="flex flex-col h-full space-y-4 p-8">
+        <div className="flex flex-col h-full space-y-4">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tight">Schichtplan</h2>
+                    <h1 className="text-3xl font-bold tracking-tight">Schichtplan</h1>
                     <p className="text-muted-foreground">
                         KW {getWeekNumber(startDate)} ({formatDate(startDate)} -{' '}
                         {formatDate(endDate)})

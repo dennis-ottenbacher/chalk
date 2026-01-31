@@ -22,10 +22,6 @@ export function StaffShiftsView({ myShifts, openShifts }: StaffShiftsViewProps) 
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight">Schichtplan Übersicht</h1>
-                    <p className="text-muted-foreground mt-1">
-                        Hier siehst du deine kommenden Schichten und kannst offene Schichten
-                        übernehmen.
-                    </p>
                 </div>
                 <div className="flex items-center bg-muted p-1 rounded-lg border">
                     <Button

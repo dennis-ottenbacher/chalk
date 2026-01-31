@@ -1,7 +1,6 @@
-import { DataTable } from '@/components/ui/data-table'
-import { columns } from './columns'
 import { getLandingPages } from '@/app/actions/landing-pages'
 import { CreateLandingPageDialog } from './CreateLandingPageDialog'
+import { LandingPagesTable } from './LandingPagesTable'
 
 export default async function LandingPagesPage() {
     const landingPages = await getLandingPages()
@@ -14,12 +13,7 @@ export default async function LandingPagesPage() {
             </div>
 
             <div className="rounded-md border bg-white">
-                <DataTable
-                    columns={columns}
-                    data={landingPages}
-                    filterColumn="title"
-                    filterPlaceholder="Seiten durchsuchen..."
-                />
+                <LandingPagesTable data={landingPages} />
             </div>
         </div>
     )

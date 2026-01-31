@@ -56,21 +56,21 @@ export default function RecentTransactionsDialog() {
             <AlertDialogTrigger asChild>
                 <Button
                     variant="outline"
-                    className="border-gray-200 hover:bg-gray-100 text-gray-700 gap-2 shadow-sm"
+                    className="border-border hover:bg-muted text-foreground gap-2 shadow-sm"
                 >
                     <History className="h-4 w-4" />
                     Transactions
                 </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent className="bg-white border-gray-200 text-gray-900 sm:max-w-[75%] flex flex-col max-h-[85vh] shadow-xl">
-                <AlertDialogHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-gray-200">
+            <AlertDialogContent className="bg-card border-border text-foreground sm:max-w-[75%] flex flex-col max-h-[85vh] shadow-xl">
+                <AlertDialogHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-border">
                     <AlertDialogTitle className="text-xl">Recent Transactions</AlertDialogTitle>
                     <Button
                         variant="ghost"
                         size="icon"
                         onClick={fetchTransactions}
                         disabled={loading}
-                        className="ml-auto text-gray-500 hover:text-gray-900 hover:bg-gray-100"
+                        className="ml-auto text-muted-foreground hover:text-foreground hover:bg-muted"
                     >
                         <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                     </Button>
@@ -78,7 +78,7 @@ export default function RecentTransactionsDialog() {
 
                 <div className="flex-1 overflow-y-auto py-4 space-y-3">
                     {transactions.length === 0 && !loading && (
-                        <div className="text-center text-slate-500 py-10">
+                        <div className="text-center text-muted-foreground py-10">
                             No recent transactions found
                         </div>
                     )}
@@ -86,38 +86,38 @@ export default function RecentTransactionsDialog() {
                     {transactions.map(tx => (
                         <div
                             key={tx.id}
-                            className="bg-gray-50 rounded-lg p-4 border border-gray-200 flex flex-col sm:flex-row justify-between gap-4"
+                            className="bg-muted rounded-lg p-4 border border-border flex flex-col sm:flex-row justify-between gap-4"
                         >
                             <div className="space-y-1">
                                 <div className="flex items-center gap-2">
                                     <span
                                         className={`text-xs font-bold px-2 py-0.5 rounded-full ${
                                             tx.status === 'completed'
-                                                ? 'bg-emerald-100 text-emerald-700'
+                                                ? 'bg-success/15 text-success'
                                                 : tx.status === 'cancelled'
-                                                  ? 'bg-red-100 text-red-700'
-                                                  : 'bg-blue-100 text-blue-700'
+                                                  ? 'bg-destructive/15 text-destructive'
+                                                  : 'bg-info/15 text-info'
                                         }`}
                                     >
                                         {tx.status.toUpperCase()}
                                     </span>
-                                    <span className="text-gray-500 text-xs">
+                                    <span className="text-muted-foreground text-xs">
                                         {new Intl.DateTimeFormat('de-DE', {
                                             dateStyle: 'medium',
                                             timeStyle: 'short',
                                         }).format(new Date(tx.created_at))}
                                     </span>
                                 </div>
-                                <div className="font-medium text-gray-900">
+                                <div className="font-medium text-foreground">
                                     €{Number(tx.total_amount).toFixed(2)}
-                                    <span className="text-gray-400 mx-2">•</span>
+                                    <span className="text-muted-foreground mx-2">•</span>
                                     <span
                                         className={
                                             tx.payment_method === 'cash'
-                                                ? 'text-green-600'
+                                                ? 'text-success'
                                                 : tx.payment_method === 'voucher'
-                                                  ? 'text-purple-600'
-                                                  : 'text-blue-600'
+                                                  ? 'text-primary'
+                                                  : 'text-info'
                                         }
                                     >
                                         {tx.payment_method === 'cash'
@@ -127,7 +127,7 @@ export default function RecentTransactionsDialog() {
                                               : 'Card'}
                                     </span>
                                 </div>
-                                <div className="text-xs text-gray-500 max-w-md">
+                                <div className="text-xs text-muted-foreground max-w-md">
                                     {tx.items &&
                                         Array.isArray(tx.items) &&
                                         tx.items.map(i => `${i.quantity}x ${i.name}`).join(', ')}
@@ -155,8 +155,8 @@ export default function RecentTransactionsDialog() {
                     ))}
                 </div>
 
-                <AlertDialogFooter className="border-t border-gray-200 pt-4">
-                    <AlertDialogCancel className="bg-gray-100 text-gray-900 hover:bg-gray-200 border-gray-200">
+                <AlertDialogFooter className="border-t border-border pt-4">
+                    <AlertDialogCancel className="bg-muted text-foreground hover:bg-accent border-border">
                         Close
                     </AlertDialogCancel>
                 </AlertDialogFooter>

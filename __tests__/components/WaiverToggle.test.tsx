@@ -13,24 +13,24 @@ describe('WaiverToggle', () => {
         render(<WaiverToggle userId="123" initialStatus={true} />)
         expect(screen.getByText('Signed')).toBeInTheDocument()
         // Check for the green background class which indicates signed
-        const button = screen.getByRole('button')
-        expect(button).toHaveClass('bg-green-600')
+        const toggle = screen.getByRole('switch')
+        expect(toggle).toHaveAttribute('data-state', 'checked')
     })
 
     test('renders correctly with initial status false', () => {
         render(<WaiverToggle userId="123" initialStatus={false} />)
         expect(screen.getByText('Not Signed')).toBeInTheDocument()
-        const button = screen.getByRole('button')
-        expect(button).toHaveClass('bg-zinc-200')
+        const toggle = screen.getByRole('switch')
+        expect(toggle).toHaveAttribute('data-state', 'unchecked')
     })
 
     test('toggles status when clicked', async () => {
         const toggleMock = vi.mocked(memberActions.toggleWaiver).mockResolvedValue(undefined)
 
         render(<WaiverToggle userId="123" initialStatus={false} />)
-        const button = screen.getByRole('button')
+        const toggle = screen.getByRole('switch')
 
-        fireEvent.click(button)
+        fireEvent.click(toggle)
 
         // Optimistic or waiting for update - component sets loading then updates
         await waitFor(() => {
@@ -48,9 +48,9 @@ describe('WaiverToggle', () => {
         const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => {})
 
         render(<WaiverToggle userId="123" initialStatus={false} />)
-        const button = screen.getByRole('button')
+        const toggle = screen.getByRole('switch')
 
-        fireEvent.click(button)
+        fireEvent.click(toggle)
 
         await waitFor(() => {
             expect(toggleMock).toHaveBeenCalled()

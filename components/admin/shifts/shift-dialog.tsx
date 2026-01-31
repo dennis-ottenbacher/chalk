@@ -379,7 +379,7 @@ export function ShiftDialog({
                                 >
                                     <input
                                         type="checkbox"
-                                        className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                                        className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
                                         checked={selectedChecklistIds.includes(checklist.id)}
                                         onChange={() => toggleChecklist(checklist.id)}
                                     />
@@ -405,7 +405,7 @@ export function ShiftDialog({
                         <input
                             type="checkbox"
                             id="repeatWeekly"
-                            className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                            className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
                             checked={repeatWeekly}
                             onChange={e => setRepeatWeekly(e.target.checked)}
                         />

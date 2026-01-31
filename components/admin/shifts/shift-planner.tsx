@@ -166,7 +166,7 @@ export default function ShiftPlanner({
                         variant="default"
                         onClick={handlePublishAll}
                         disabled={isPublishing}
-                        className="bg-blue-600 hover:bg-blue-700"
+                        className="bg-primary hover:bg-primary/90"
                     >
                         {isPublishing ? (
                             <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -223,7 +223,7 @@ export default function ShiftPlanner({
                                         className={cn(
                                             'flex flex-col gap-1 p-2 rounded-md border text-sm cursor-pointer hover:border-primary transition-colors shadow-sm',
                                             shift.status === 'draft'
-                                                ? 'bg-yellow-50/50 border-yellow-200 dark:bg-yellow-900/10'
+                                                ? 'bg-warning/10 border-warning/30 dark:bg-warning/10'
                                                 : 'bg-card',
                                             shift.staff_id === null ? 'border-dashed border-2' : ''
                                         )}
@@ -253,7 +253,7 @@ export default function ShiftPlanner({
                                         <div className="flex items-center justify-between font-semibold">
                                             <span>{shift.role}</span>
                                             {shift.status === 'draft' && (
-                                                <span className="text-[10px] bg-yellow-100 text-yellow-800 px-1 rounded">
+                                                <span className="text-[10px] bg-warning/15 text-warning px-1 rounded">
                                                     Entwurf
                                                 </span>
                                             )}

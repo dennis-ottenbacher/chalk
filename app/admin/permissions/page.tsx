@@ -13,11 +13,7 @@ export default async function AdminPermissionsPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-bold tracking-tight">Access Control & Roles</h1>
-                <p className="text-gray-500">
-                    Manage system roles and their associated permissions. Changes are saved
-                    immediately but may require a page refresh for some users to take effect.
-                </p>
+                <h1 className="text-3xl font-bold tracking-tight">Access Control & Roles</h1>
             </div>
 
             <PermissionMatrix initialPermissions={permissions || []} />

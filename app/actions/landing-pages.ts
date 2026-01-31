@@ -190,3 +190,42 @@ export async function unpublishLandingPage(
 ): Promise<{ success: boolean; error?: string }> {
     return updateLandingPage(id, { is_published: false })
 }
+
+export async function getPreviewLandingPage(
+    slug: string
+): Promise<{ landingPage?: LandingPage; error?: string }> {
+    const supabase = await createClient()
+    const organizationId = await getOrganizationId()
+
+    // 1. Check if user is logged in
+    const {
+        data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user) {
+        return { error: 'Nicht angemeldet' }
+    }
+
+    // 2. Check permission
+    const { hasPermission } = await import('@/lib/permissions')
+    const canPreview = await hasPermission(user.id, 'landing_pages.preview', organizationId)
+
+    if (!canPreview) {
+        return { error: 'Keine Berechtigung zum Anzeigen von Entwürfen' }
+    }
+
+    // 3. Fetch landing page (regardless of is_published status)
+    const { data, error } = await supabase
+        .from('landing_pages')
+        .select('*')
+        .eq('organization_id', organizationId)
+        .eq('slug', slug)
+        .single()
+
+    if (error || !data) {
+        console.error('Error fetching preview landing page:', error)
+        return { error: 'Seite nicht gefunden' }
+    }
+
+    return { landingPage: data }
+}

@@ -50,14 +50,14 @@ export function ChecklistItemRenderer({
         <Card
             className={cn(
                 'transition-all',
-                isComplete() ? 'border-green-200 bg-green-50/50' : 'border-gray-200'
+                isComplete() ? 'border-success/30 bg-success/5' : 'border-border'
             )}
         >
             <CardContent className="p-4">
                 <div className="flex items-start gap-4">
                     <div className="mt-1">
                         {isComplete() ? (
-                            <CheckCircle2 className="h-5 w-5 text-green-500" />
+                            <CheckCircle2 className="h-5 w-5 text-success" />
                         ) : (
                             <Circle className="h-5 w-5 text-muted-foreground" />
                         )}
@@ -167,14 +167,14 @@ function RatingInput({
                     onClick={() => onChange(star)}
                     disabled={disabled}
                     className={cn(
-                        'p-1 rounded transition-colors hover:bg-yellow-100',
+                        'p-1 rounded transition-colors hover:bg-warning/20',
                         disabled && 'opacity-50 cursor-not-allowed'
                     )}
                 >
                     <Star
                         className={cn(
                             'h-8 w-8 transition-colors',
-                            star <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+                            star <= rating ? 'fill-warning text-warning' : 'text-muted-foreground'
                         )}
                     />
                 </button>
@@ -233,7 +233,7 @@ function MultiselectInput({
     disabled: boolean
 }) {
     return (
-        <div className="inline-flex rounded-full border border-gray-300 overflow-hidden">
+        <div className="inline-flex rounded-full border border-border overflow-hidden">
             {options.map(option => (
                 <button
                     key={option}
@@ -242,8 +242,8 @@ function MultiselectInput({
                     className={cn(
                         'px-6 py-2 text-sm font-medium transition-colors',
                         selected === option
-                            ? 'bg-primary text-white'
-                            : 'bg-white text-gray-600 hover:bg-gray-50',
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-card text-muted-foreground hover:bg-muted',
                         disabled && 'opacity-50 cursor-not-allowed'
                     )}
                 >

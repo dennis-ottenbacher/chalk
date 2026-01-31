@@ -38,7 +38,7 @@ export default function CompanySettingsForm({ initialSettings }: CompanySettings
     }
 
     return (
-        <div className="rounded-md border bg-white p-6">
+        <div className="rounded-md border border-border bg-card p-6">
             <div className="mb-4">
                 <h3 className="text-lg font-medium">Company Information</h3>
                 <p className="text-sm text-muted-foreground">

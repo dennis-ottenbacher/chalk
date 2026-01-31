@@ -85,10 +85,7 @@ export function MessageInput({
 
     return (
         <div
-            className={cn(
-                'border-t border-gray-200 bg-white p-4',
-                isThreadReply && 'border-t-0 pt-2'
-            )}
+            className={cn('border-t border-border bg-card p-4', isThreadReply && 'border-t-0 pt-2')}
         >
             {/* Attachment Previews */}
             {attachments.length > 0 && (
@@ -98,10 +95,10 @@ export function MessageInput({
                             <img
                                 src={URL.createObjectURL(file)}
                                 alt={file.name}
-                                className="h-20 w-20 object-cover rounded-lg border border-gray-200"
+                                className="h-20 w-20 object-cover rounded-lg border border-border"
                             />
                             <button
-                                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                                 onClick={() => removeAttachment(index)}
                             >
                                 <X className="h-3 w-3" />
@@ -115,7 +112,7 @@ export function MessageInput({
             <div
                 className={cn(
                     'flex items-end gap-2 rounded-lg border transition-colors',
-                    isDragging ? 'border-blue-400 bg-blue-50' : 'border-gray-200 bg-gray-50',
+                    isDragging ? 'border-primary bg-primary/5' : 'border-border bg-muted',
                     disabled && 'opacity-50 pointer-events-none'
                 )}
                 onDragOver={handleDragOver}
@@ -130,7 +127,7 @@ export function MessageInput({
                     className="h-10 w-10 p-0 flex-shrink-0 ml-1"
                     onClick={() => fileInputRef.current?.click()}
                 >
-                    <Paperclip className="h-5 w-5 text-gray-500" />
+                    <Paperclip className="h-5 w-5 text-muted-foreground" />
                 </Button>
                 <input
                     ref={fileInputRef}
@@ -150,7 +147,7 @@ export function MessageInput({
                     placeholder={placeholder}
                     disabled={disabled || isSending}
                     rows={1}
-                    className="flex-1 bg-transparent border-0 resize-none py-2.5 text-sm focus:outline-none focus:ring-0 placeholder:text-gray-400"
+                    className="flex-1 bg-transparent border-0 resize-none py-2.5 text-sm text-foreground focus:outline-none focus:ring-0 placeholder:text-muted-foreground"
                 />
 
                 {/* Send Button */}
@@ -164,7 +161,7 @@ export function MessageInput({
                     }
                 >
                     {isSending ? (
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
                     ) : (
                         <Send className="h-5 w-5" />
                     )}
@@ -173,8 +170,8 @@ export function MessageInput({
 
             {/* Drag & Drop Hint */}
             {isDragging && (
-                <div className="absolute inset-0 flex items-center justify-center bg-blue-50/80 rounded-lg border-2 border-dashed border-blue-400">
-                    <div className="flex flex-col items-center gap-2 text-blue-600">
+                <div className="absolute inset-0 flex items-center justify-center bg-primary/5 rounded-lg border-2 border-dashed border-primary">
+                    <div className="flex flex-col items-center gap-2 text-primary">
                         <ImageIcon className="h-8 w-8" />
                         <span className="font-medium">Bild hierher ziehen</span>
                     </div>

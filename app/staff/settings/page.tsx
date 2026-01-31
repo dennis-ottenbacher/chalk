@@ -29,7 +29,7 @@ export default async function SettingsPage() {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 p-8 overflow-y-auto h-full">
             <h1 className="text-3xl font-bold tracking-tight">Einstellungen</h1>
             <Card>
                 <CardHeader>

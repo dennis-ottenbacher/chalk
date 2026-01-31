@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -68,7 +68,7 @@ export default function TseSettings({ initialConfig }: TseSettingsProps) {
         endDate: new Date().toISOString().split('T')[0],
     })
 
-    const fetchTssStatus = async () => {
+    const fetchTssStatus = useCallback(async () => {
         setIsLoadingStatus(true)
         try {
             const status = await getTssStatus()
@@ -78,7 +78,13 @@ export default function TseSettings({ initialConfig }: TseSettingsProps) {
         } finally {
             setIsLoadingStatus(false)
         }
-    }
+    }, [])
+
+    useEffect(() => {
+        if (initialConfig?.is_active) {
+            fetchTssStatus()
+        }
+    }, [initialConfig?.is_active, fetchTssStatus])
 
     const handleInitialize = async () => {
         setIsInitializing(true)
@@ -195,15 +201,24 @@ export default function TseSettings({ initialConfig }: TseSettingsProps) {
 
     return (
         <div className="space-y-6">
-            <Card className="p-6 bg-white">
+            <Card className="p-6 bg-card">
                 <div className="flex items-center gap-2 mb-4">
-                    <Shield className="h-5 w-5 text-blue-600" />
+                    <Shield className="h-5 w-5 text-info" />
                     <h3 className="text-lg font-semibold">TSE Configuration</h3>
                 </div>
 
                 <p className="text-muted-foreground text-sm mb-6">
-                    Configure fiskaly Cloud TSE for German fiscal compliance (KassenSichV). All
-                    transactions will be cryptographically signed.
+                    Configure{' '}
+                    <a
+                        href="https://www.fiskaly.com/de"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline font-medium"
+                    >
+                        fiskaly Cloud TSE
+                    </a>{' '}
+                    for German fiscal compliance (KassenSichV). All transactions will be
+                    cryptographically signed.
                 </p>
 
                 <div className="space-y-4">
@@ -284,7 +299,7 @@ export default function TseSettings({ initialConfig }: TseSettingsProps) {
                                         environment: e.target.value as 'sandbox' | 'production',
                                     })
                                 }
-                                className="w-full px-3 py-2 border rounded-md"
+                                className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground"
                             >
                                 <option value="sandbox">Sandbox (Testing)</option>
                                 <option value="production">Production</option>
@@ -296,8 +311,8 @@ export default function TseSettings({ initialConfig }: TseSettingsProps) {
                         <div
                             className={`flex items-center gap-2 p-3 rounded-md ${
                                 testResult.success
-                                    ? 'bg-green-900/20 text-green-400'
-                                    : 'bg-red-900/20 text-red-400'
+                                    ? 'bg-success/15 text-success'
+                                    : 'bg-destructive/15 text-destructive'
                             }`}
                         >
                             {testResult.success ? (
@@ -339,10 +354,10 @@ export default function TseSettings({ initialConfig }: TseSettingsProps) {
 
             {/* TSS Management Card */}
             {initialConfig && (
-                <Card className="p-6 bg-white">
+                <Card className="p-6 bg-card">
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
-                            <Power className="h-5 w-5 text-purple-600" />
+                            <Power className="h-5 w-5 text-primary" />
                             <h3 className="text-lg font-semibold">TSS Management</h3>
                         </div>
                         <Button
@@ -364,41 +379,43 @@ export default function TseSettings({ initialConfig }: TseSettingsProps) {
 
                     {/* Status Display */}
                     {tssStatus && (
-                        <div className="mb-4 p-4 rounded-lg bg-gray-50 border">
+                        <div className="mb-4 p-4 rounded-lg bg-muted border border-border">
                             <div className="flex items-center gap-4 flex-wrap">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-sm text-gray-500">TSS Status:</span>
+                                    <span className="text-sm text-muted-foreground">
+                                        TSS Status:
+                                    </span>
                                     {tssStatus.tssState === 'INITIALIZED' ? (
-                                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-success/15 text-success">
                                             <CheckCircle className="h-3 w-3" />
                                             INITIALIZED
                                         </span>
                                     ) : tssStatus.tssState === 'DISABLED' ? (
-                                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-destructive/15 text-destructive">
                                             <XCircle className="h-3 w-3" />
                                             DISABLED
                                         </span>
                                     ) : (
-                                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-warning/15 text-warning">
                                             <AlertTriangle className="h-3 w-3" />
                                             {tssStatus.tssState || 'UNKNOWN'}
                                         </span>
                                     )}
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span className="text-sm text-gray-500">Client:</span>
+                                    <span className="text-sm text-muted-foreground">Client:</span>
                                     {tssStatus.clientRegistered ? (
-                                        <span className="text-sm text-green-600">
-                                            Registriert ✓
-                                        </span>
+                                        <span className="text-sm text-success">Registriert ✓</span>
                                     ) : (
-                                        <span className="text-sm text-yellow-600">
+                                        <span className="text-sm text-warning">
                                             Nicht registriert
                                         </span>
                                     )}
                                 </div>
                                 {tssStatus.error && (
-                                    <span className="text-sm text-red-600">{tssStatus.error}</span>
+                                    <span className="text-sm text-destructive">
+                                        {tssStatus.error}
+                                    </span>
                                 )}
                             </div>
                         </div>
@@ -410,7 +427,7 @@ export default function TseSettings({ initialConfig }: TseSettingsProps) {
                             <Button
                                 onClick={handleInitialize}
                                 disabled={isInitializing}
-                                className="bg-purple-600 hover:bg-purple-700"
+                                className="bg-primary hover:bg-primary/90"
                             >
                                 {isInitializing ? (
                                     <>
@@ -431,11 +448,11 @@ export default function TseSettings({ initialConfig }: TseSettingsProps) {
 
                     {/* Progress Logs */}
                     {initLogs.length > 0 && (
-                        <div className="mt-4 p-4 rounded-lg bg-gray-900 text-green-400 font-mono text-sm max-h-60 overflow-y-auto">
+                        <div className="mt-4 p-4 rounded-lg bg-sidebar text-success font-mono text-sm max-h-60 overflow-y-auto">
                             {initLogs.map((log, index) => (
                                 <div
                                     key={index}
-                                    className={log.startsWith('❌') ? 'text-red-400' : ''}
+                                    className={log.startsWith('❌') ? 'text-destructive' : ''}
                                 >
                                     {log}
                                 </div>
@@ -446,9 +463,9 @@ export default function TseSettings({ initialConfig }: TseSettingsProps) {
             )}
 
             {initialConfig?.is_active && (
-                <Card className="p-6 bg-white">
+                <Card className="p-6 bg-card">
                     <div className="flex items-center gap-2 mb-4">
-                        <Download className="h-5 w-5 text-emerald-600" />
+                        <Download className="h-5 w-5 text-success" />
                         <h3 className="text-lg font-semibold">DSFinV-K Export</h3>
                     </div>
 

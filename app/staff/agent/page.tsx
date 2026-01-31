@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import {
     getEvents,
     deleteEvent,
@@ -23,6 +24,8 @@ type StaffEvent = {
 
 export default function AgentPage() {
     const [events, setEvents] = useState<StaffEvent[]>([])
+    const searchParams = useSearchParams()
+    const initialPrompt = searchParams.get('prompt') || undefined
 
     const loadEvents = async () => {
         const evts = await getEvents()
@@ -44,16 +47,13 @@ export default function AgentPage() {
     }
 
     return (
-        <div className="flex h-full gap-6 relative">
-            {/* Custom Modal for Event Creation */}
-
-            {/* Chat Area */}
-            {/* Chat Area */}
+        <div className="flex h-full gap-6 relative p-8">
             <AgentChat
                 className="flex-1 h-[calc(100vh-8rem)]"
                 onMessageSent={loadEvents}
                 getMessagesFn={getChalkMessages}
                 sendMessageFn={sendChalkMessage}
+                initialPrompt={initialPrompt}
             />
 
             {/* Events Sidebar */}

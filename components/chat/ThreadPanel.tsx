@@ -42,12 +42,12 @@ export function ThreadPanel({
         .slice(0, 2)
 
     return (
-        <div className="w-96 border-l border-gray-200 bg-white flex flex-col h-full">
+        <div className="w-96 border-l border-border bg-card flex flex-col h-full">
             {/* Header */}
-            <div className="h-16 border-b border-gray-200 flex items-center justify-between px-4">
+            <div className="h-16 border-b border-border flex items-center justify-between px-4">
                 <div>
-                    <h2 className="font-semibold text-gray-900">Thread</h2>
-                    <p className="text-xs text-gray-500">
+                    <h2 className="font-semibold text-foreground">Thread</h2>
+                    <p className="text-xs text-muted-foreground">
                         {replies.length} {replies.length === 1 ? 'Antwort' : 'Antworten'}
                     </p>
                 </div>
@@ -57,25 +57,27 @@ export function ThreadPanel({
             </div>
 
             {/* Parent Message */}
-            <div className="p-4 border-b border-gray-200 bg-gray-50">
+            <div className="p-4 border-b border-border bg-muted/50">
                 <div className="flex gap-3">
                     <Avatar className="h-8 w-8 flex-shrink-0">
                         <AvatarImage src={parentMessage.user?.avatar_url || undefined} />
-                        <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
+                        <AvatarFallback className="bg-primary/10 text-primary text-xs">
                             {initials}
                         </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
                         <div className="flex items-baseline gap-2 mb-0.5">
-                            <span className="font-semibold text-sm text-gray-900">{userName}</span>
-                            <span className="text-xs text-gray-400">
+                            <span className="font-semibold text-sm text-foreground">
+                                {userName}
+                            </span>
+                            <span className="text-xs text-muted-foreground">
                                 {formatDistanceToNow(new Date(parentMessage.created_at), {
                                     addSuffix: true,
                                     locale: de,
                                 })}
                             </span>
                         </div>
-                        <p className="text-sm text-gray-800 whitespace-pre-wrap">
+                        <p className="text-sm text-foreground/90 whitespace-pre-wrap">
                             {parentMessage.content}
                         </p>
                     </div>

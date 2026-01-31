@@ -36,7 +36,7 @@ export function ShiftChecklistsView({ shiftId, checklists }: ShiftChecklistsView
         return (
             <Card>
                 <CardContent className="flex flex-col items-center justify-center py-12">
-                    <CheckCircle2 className="h-12 w-12 text-green-500 mb-4" />
+                    <CheckCircle2 className="h-12 w-12 text-success mb-4" />
                     <h3 className="text-lg font-medium">Keine Checklisten</h3>
                     <p className="text-muted-foreground text-center mt-2">
                         Für diese Schicht sind keine Checklisten zugewiesen.
@@ -63,7 +63,7 @@ export function ShiftChecklistsView({ shiftId, checklists }: ShiftChecklistsView
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     {isComplete ? (
-                                        <CheckCircle2 className="h-6 w-6 text-green-500" />
+                                        <CheckCircle2 className="h-6 w-6 text-success" />
                                     ) : (
                                         <Circle className="h-6 w-6 text-muted-foreground" />
                                     )}
@@ -83,7 +83,7 @@ export function ShiftChecklistsView({ shiftId, checklists }: ShiftChecklistsView
                             </div>
 
                             {/* Progress Bar */}
-                            <div className="mt-4 w-full bg-gray-200 rounded-full h-2">
+                            <div className="mt-4 w-full bg-muted rounded-full h-2">
                                 <div
                                     className="bg-primary h-2 rounded-full transition-all duration-300"
                                     style={{ width: `${progressPercent}%` }}

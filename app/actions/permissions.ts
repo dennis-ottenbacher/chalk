@@ -42,7 +42,7 @@ export async function updatePermission(
             updated_at: new Date().toISOString(),
             organization_id: organizationId,
         },
-        { onConflict: 'role, permission_key, organization_id' }
+        { onConflict: 'role, permission_key' }
     )
 
     if (error) {

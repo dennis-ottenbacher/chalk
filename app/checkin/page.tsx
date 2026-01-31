@@ -70,7 +70,12 @@ export default function CheckInPage() {
         <div className="container mx-auto p-4 max-w-full h-screen flex flex-col">
             <header className="mb-4 flex items-center justify-between">
                 <h1 className="text-3xl font-bold tracking-tight">Check-in / Fast Lane</h1>
-                <Badge variant="outline" className={loading ? 'bg-yellow-100' : 'bg-green-100'}>
+                <Badge
+                    variant="outline"
+                    className={
+                        loading ? 'bg-warning/20 text-warning' : 'bg-success/20 text-success'
+                    }
+                >
                     {loading ? 'Verarbeite...' : 'Bereit'}
                 </Badge>
             </header>
@@ -108,17 +113,17 @@ export default function CheckInPage() {
                         <Card
                             className={`h-full border-4 flex flex-col justify-center items-center text-center p-8 transition-colors ${
                                 lastResult.success
-                                    ? 'border-green-500 bg-green-50/50'
-                                    : 'border-red-500 bg-red-50/50'
+                                    ? 'border-success bg-success/5'
+                                    : 'border-destructive bg-destructive/5'
                             }`}
                         >
                             <div
-                                className={`rounded-full p-4 mb-6 ${lastResult.success ? 'bg-green-100' : 'bg-red-100'}`}
+                                className={`rounded-full p-4 mb-6 ${lastResult.success ? 'bg-success/15' : 'bg-destructive/15'}`}
                             >
                                 {lastResult.success ? (
-                                    <CheckCircle2 className="w-24 h-24 text-green-600" />
+                                    <CheckCircle2 className="w-24 h-24 text-success" />
                                 ) : (
-                                    <AlertCircle className="w-24 h-24 text-red-600" />
+                                    <AlertCircle className="w-24 h-24 text-destructive" />
                                 )}
                             </div>
 
@@ -147,7 +152,7 @@ export default function CheckInPage() {
                                         )}
                                     </div>
                                     {lastResult.remainingEntries !== undefined && (
-                                        <div className="mt-4 p-3 bg-white rounded-lg border shadow-sm inline-block">
+                                        <div className="mt-4 p-3 bg-card rounded-lg border shadow-sm inline-block">
                                             <span className="block text-xs uppercase text-muted-foreground font-bold">
                                                 Verbleibende Einträge
                                             </span>

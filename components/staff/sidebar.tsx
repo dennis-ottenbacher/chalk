@@ -17,8 +17,8 @@ export function StaffSidebar() {
     const pathname = usePathname()
 
     return (
-        <div className="flex h-full w-64 flex-col bg-gray-900 text-white">
-            <div className="flex h-16 items-center justify-center border-b border-gray-800">
+        <div className="flex h-full w-64 flex-col bg-sidebar text-sidebar-foreground">
+            <div className="flex h-16 items-center justify-center border-b border-sidebar-border">
                 <h1 className="text-xl font-bold">Chalk Staff</h1>
             </div>
             <nav className="flex-1 space-y-1 p-4">
@@ -31,8 +31,8 @@ export function StaffSidebar() {
                             className={cn(
                                 'flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
                                 isActive
-                                    ? 'bg-gray-800 text-white'
-                                    : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                                    ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+                                    : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
                             )}
                         >
                             <item.icon className="h-5 w-5" />

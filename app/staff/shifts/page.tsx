@@ -33,5 +33,9 @@ export default async function ShiftsPage() {
     if (myShiftsError) console.error('My Shifts error:', myShiftsError)
     if (openShiftsError) console.error('Open Shifts error:', openShiftsError)
 
-    return <StaffShiftsView myShifts={myShifts || []} openShifts={openShifts || []} />
+    return (
+        <div className="h-full overflow-y-auto p-8">
+            <StaffShiftsView myShifts={myShifts || []} openShifts={openShifts || []} />
+        </div>
+    )
 }

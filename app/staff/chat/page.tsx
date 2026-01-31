@@ -10,6 +10,7 @@ import {
     ThreadPanel,
     CreateChannelModal,
 } from '@/components/chat'
+import { Card } from '@/components/ui/card'
 import {
     getChannels,
     getMessages,
@@ -269,19 +270,19 @@ export default function StaffChatPage() {
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center h-screen bg-gray-100">
+            <div className="flex items-center justify-center h-full bg-background">
                 <div className="flex flex-col items-center gap-2">
-                    <div className="w-10 h-10 border-3 border-gray-300 border-t-blue-600 rounded-full animate-spin" />
-                    <span className="text-gray-500">Lade Chat...</span>
+                    <div className="w-10 h-10 border-3 border-muted-foreground/30 border-t-primary rounded-full animate-spin" />
+                    <span className="text-muted-foreground">Lade Chat...</span>
                 </div>
             </div>
         )
     }
 
     return (
-        <div className="flex h-screen bg-gray-100">
+        <Card className="flex flex-row h-[calc(100vh-5rem)] overflow-hidden border shadow-sm p-0 gap-0 m-8">
             {/* Sidebar */}
-            <div className="w-64 flex-shrink-0">
+            <div className="w-64 flex-shrink-0 border-r bg-muted/10">
                 <ChatSidebar
                     channels={channels}
                     activeChannelId={activeChannel?.id || null}
@@ -292,7 +293,7 @@ export default function StaffChatPage() {
             </div>
 
             {/* Main Chat Area */}
-            <div className="flex-1 flex flex-col bg-white">
+            <div className="flex-1 flex flex-col bg-background relative">
                 <ChannelHeader channel={activeChannel} memberCount={memberCount} />
 
                 {activeChannel ? (
@@ -313,7 +314,7 @@ export default function StaffChatPage() {
                         />
                     </>
                 ) : (
-                    <div className="flex-1 flex items-center justify-center text-gray-500">
+                    <div className="flex-1 flex items-center justify-center text-muted-foreground">
                         Wähle einen Channel aus, um zu chatten
                     </div>
                 )}
@@ -321,16 +322,18 @@ export default function StaffChatPage() {
 
             {/* Thread Panel */}
             {activeThread && (
-                <ThreadPanel
-                    parentMessage={activeThread}
-                    replies={threadReplies}
-                    currentUserId={currentUserId}
-                    isLoading={isLoadingThread}
-                    onClose={() => setActiveThread(null)}
-                    onSendReply={handleSendThreadReply}
-                    onReaction={handleReaction}
-                    onRemoveReaction={handleRemoveReaction}
-                />
+                <div className="w-80 border-l bg-background">
+                    <ThreadPanel
+                        parentMessage={activeThread}
+                        replies={threadReplies}
+                        currentUserId={currentUserId}
+                        isLoading={isLoadingThread}
+                        onClose={() => setActiveThread(null)}
+                        onSendReply={handleSendThreadReply}
+                        onReaction={handleReaction}
+                        onRemoveReaction={handleRemoveReaction}
+                    />
+                </div>
             )}
 
             {/* Create Channel Modal */}
@@ -339,6 +342,6 @@ export default function StaffChatPage() {
                 onClose={() => setIsCreateModalOpen(false)}
                 onCreate={handleCreateChannel}
             />
-        </div>
+        </Card>
     )
 }

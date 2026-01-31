@@ -61,12 +61,8 @@ describe('login action', () => {
         // revalidatePath('/admin', 'layout')
         // redirect('/admin')
 
-        // So if auth is successful:
-        try {
-            await login(formData)
-        } catch (e) {
-            // redirect might throw, but our mock defaults to return undefined
-        }
+        // redirect might throw NEXT_REDIRECT, but our mock returns undefined
+        await login(formData)
 
         expect(mockSignInWithPassword).toHaveBeenCalledWith({
             email: 'test@example.com',

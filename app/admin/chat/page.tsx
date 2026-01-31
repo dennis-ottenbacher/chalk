@@ -12,6 +12,7 @@ import {
     CreateChannelModal,
 } from '@/components/chat'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import {
     getChannels,
     getMessages,
@@ -283,9 +284,9 @@ export default function AdminChatPage() {
     }
 
     return (
-        <div className="flex h-screen bg-gray-100">
+        <Card className="flex flex-row h-[calc(100vh-5rem)] overflow-hidden border shadow-sm p-0 gap-0">
             {/* Sidebar */}
-            <div className="w-64 flex-shrink-0">
+            <div className="w-64 flex-shrink-0 border-r bg-muted/10">
                 <ChatSidebar
                     channels={channels}
                     activeChannelId={activeChannel?.id || null}
@@ -300,7 +301,7 @@ export default function AdminChatPage() {
             </div>
 
             {/* Main Chat Area */}
-            <div className="flex-1 flex flex-col bg-white">
+            <div className="flex-1 flex flex-col bg-background relative">
                 <ChannelHeader
                     channel={activeChannel}
                     memberCount={memberCount}
@@ -357,24 +358,31 @@ export default function AdminChatPage() {
                         />
                     </>
                 ) : (
-                    <div className="flex-1 flex items-center justify-center text-gray-500">
+                    <div className="flex-1 flex items-center justify-center text-muted-foreground">
                         Wähle einen Channel aus, um zu chatten
                     </div>
                 )}
+
+                {/* Thread Panel Overlay or Side-by-Side? 
+                    Originally it was Rendered at the end. 
+                    If we want it 'like Chalk Bot' maybe it should fly out.
+                */}
             </div>
 
             {/* Thread Panel */}
             {activeThread && (
-                <ThreadPanel
-                    parentMessage={activeThread}
-                    replies={threadReplies}
-                    currentUserId={currentUserId}
-                    isLoading={isLoadingThread}
-                    onClose={() => setActiveThread(null)}
-                    onSendReply={handleSendThreadReply}
-                    onReaction={handleReaction}
-                    onRemoveReaction={handleRemoveReaction}
-                />
+                <div className="w-80 border-l bg-background">
+                    <ThreadPanel
+                        parentMessage={activeThread}
+                        replies={threadReplies}
+                        currentUserId={currentUserId}
+                        isLoading={isLoadingThread}
+                        onClose={() => setActiveThread(null)}
+                        onSendReply={handleSendThreadReply}
+                        onReaction={handleReaction}
+                        onRemoveReaction={handleRemoveReaction}
+                    />
+                </div>
             )}
 
             {/* Create Channel Modal */}
@@ -383,6 +391,6 @@ export default function AdminChatPage() {
                 onClose={() => setIsCreateModalOpen(false)}
                 onCreate={handleCreateChannel}
             />
-        </div>
+        </Card>
     )
 }

@@ -19,6 +19,9 @@ export async function hasPermission(
 
     if (!profile?.role) return false
 
+    // Admins always have permission
+    if (profile.role === 'admin') return true
+
     // 2. Check Permission
     // We try to find the permission for this role and organization
     const { data: permission } = await supabase

@@ -67,14 +67,14 @@ export default function CartSidebar({ settings }: CartSidebarProps) {
     }, [items])
 
     return (
-        <div className="flex flex-col h-full bg-white border-l border-gray-200 w-full md:w-96 shadow-xl">
-            <div className="p-4 border-b border-gray-200 space-y-3">
+        <div className="flex flex-col h-full bg-card border-l border-border w-full md:w-96 shadow-xl">
+            <div className="p-4 border-b border-border space-y-3">
                 <div className="flex justify-between items-center">
-                    <h2 className="text-xl font-bold text-gray-900">Current Order</h2>
+                    <h2 className="text-xl font-bold text-foreground">Current Order</h2>
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
                         onClick={clearCart}
                         disabled={items.length === 0}
                     >
@@ -88,7 +88,7 @@ export default function CartSidebar({ settings }: CartSidebarProps) {
 
             <div className="flex-grow overflow-y-auto p-4 space-y-4">
                 {items.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-full text-gray-500 italic">
+                    <div className="flex flex-col items-center justify-center h-full text-muted-foreground italic">
                         <p>Cart is empty</p>
                         <p className="text-sm">Add items from the grid</p>
                     </div>
@@ -106,23 +106,24 @@ export default function CartSidebar({ settings }: CartSidebarProps) {
                 )}
             </div>
 
-            <div className="p-4 bg-white border-t border-gray-200 space-y-4">
+            <div className="p-4 bg-card border-t border-border space-y-4">
                 <div className="space-y-2">
-                    <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                         Discount
                     </label>
                     <div className="flex gap-2">
-                        <div className="flex bg-gray-100 rounded-md p-1 border border-gray-200 shrink-0">
+                        <div className="flex bg-muted rounded-md p-1 border border-border shrink-0">
+                            {/* POS: Large touch targets */}
                             <Button
                                 variant={discountType === 'absolute' ? 'secondary' : 'ghost'}
-                                className={`h-8 w-10 text-sm font-bold ${discountType === 'absolute' ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-md' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200'}`}
+                                className={`h-10 w-12 text-sm font-bold ${discountType === 'absolute' ? 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground hover:bg-accent'}`}
                                 onClick={() => setDiscount('absolute', discountValue)}
                             >
                                 €
                             </Button>
                             <Button
                                 variant={discountType === 'percentage' ? 'secondary' : 'ghost'}
-                                className={`h-8 w-10 text-sm font-bold ${discountType === 'percentage' ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-md' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200'}`}
+                                className={`h-10 w-12 text-sm font-bold ${discountType === 'percentage' ? 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground hover:bg-accent'}`}
                                 onClick={() => setDiscount('percentage', discountValue)}
                             >
                                 %
@@ -135,19 +136,19 @@ export default function CartSidebar({ settings }: CartSidebarProps) {
                             onChange={e =>
                                 setDiscount(discountType, parseFloat(e.target.value) || 0)
                             }
-                            className="h-10 text-base font-bold text-center bg-gray-50 border-gray-200 text-gray-900 focus:border-indigo-500 placeholder:text-gray-400"
+                            className="h-12 text-base font-bold text-center bg-muted border-border text-foreground focus:border-primary placeholder:text-muted-foreground"
                             placeholder="0"
                         />
                     </div>
                 </div>
 
-                <div className="space-y-1 pt-2 border-t border-gray-200">
-                    <div className="flex justify-between text-sm text-gray-500">
+                <div className="space-y-1 pt-2 border-t border-border">
+                    <div className="flex justify-between text-sm text-muted-foreground">
                         <span>Subtotal</span>
                         <span>€{subtotal.toFixed(2)}</span>
                     </div>
                     {generalDiscountAmount > 0 && (
-                        <div className="flex justify-between text-sm text-red-500">
+                        <div className="flex justify-between text-sm text-destructive">
                             <span>
                                 Discount (
                                 {discountType === 'percentage'
@@ -159,13 +160,13 @@ export default function CartSidebar({ settings }: CartSidebarProps) {
                         </div>
                     )}
                     {appliedVoucher && (
-                        <div className="flex justify-between text-sm text-emerald-600 font-medium">
+                        <div className="flex justify-between text-sm text-success font-medium">
                             <div className="flex items-center gap-1">
                                 <span>Voucher ({appliedVoucher.code})</span>
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="h-4 w-4 p-0 hover:bg-emerald-100 rounded-full"
+                                    className="h-4 w-4 p-0 hover:bg-success/10 rounded-full"
                                     onClick={clearVoucher}
                                     title="Remove Voucher"
                                 >
@@ -175,9 +176,9 @@ export default function CartSidebar({ settings }: CartSidebarProps) {
                             <span>-€{voucherDiscountAmount.toFixed(2)}</span>
                         </div>
                     )}
-                    <div className="flex justify-between text-lg font-bold text-gray-900 pt-1">
+                    <div className="flex justify-between text-lg font-bold text-foreground pt-1">
                         <span>Total</span>
-                        <span className="text-emerald-600">€{total.toFixed(2)}</span>
+                        <span className="text-success">€{total.toFixed(2)}</span>
                     </div>
                 </div>
 
@@ -202,10 +203,10 @@ const CartItemRow = memo(
         setItemVoucherCode: (id: string, code: string) => void
     }) => {
         return (
-            <div className="flex flex-col bg-gray-50 p-3 rounded-md border border-gray-200">
+            <div className="flex flex-col bg-muted p-3 rounded-md border border-border">
                 <div className="flex justify-between items-start mb-2">
-                    <span className="font-medium text-gray-900 line-clamp-1">{item.name}</span>
-                    <span className="font-bold text-emerald-600 shrink-0 ml-2">
+                    <span className="font-medium text-foreground line-clamp-1">{item.name}</span>
+                    <span className="font-bold text-success shrink-0 ml-2">
                         €{(item.price * item.quantity).toFixed(2)}
                     </span>
                 </div>
@@ -213,7 +214,7 @@ const CartItemRow = memo(
                 {/* Member Search for Plan items */}
                 {item.type === 'plan' && (
                     <div className="mb-3">
-                        <div className="text-xs text-gray-500 mb-1 ml-1 uppercase tracking-wider font-semibold">
+                        <div className="text-xs text-muted-foreground mb-1 ml-1 uppercase tracking-wider font-semibold">
                             Assign to Member
                         </div>
                         <MemberSearch
@@ -229,7 +230,7 @@ const CartItemRow = memo(
                             onClear={() => setItemMember(item.cartId, null)}
                         />
                         {!item.assignedMember && (
-                            <p className="text-xs text-amber-500 mt-1 ml-1 flex items-center">
+                            <p className="text-xs text-warning mt-1 ml-1 flex items-center">
                                 Required for plans
                             </p>
                         )}
@@ -239,7 +240,7 @@ const CartItemRow = memo(
                 {/* Voucher Code for Voucher items */}
                 {item.type === 'voucher' && (
                     <div className="mb-3">
-                        <div className="text-xs text-gray-500 mb-1 ml-1 uppercase tracking-wider font-semibold">
+                        <div className="text-xs text-muted-foreground mb-1 ml-1 uppercase tracking-wider font-semibold">
                             Voucher Code
                         </div>
                         <Input
@@ -247,28 +248,29 @@ const CartItemRow = memo(
                             placeholder="Enter voucher code..."
                             value={item.voucherCode || ''}
                             onChange={e => setItemVoucherCode(item.cartId, e.target.value)}
-                            className="bg-white border-gray-300"
+                            className="bg-card border-border"
                         />
                     </div>
                 )}
 
-                <div className="flex justify-between items-center bg-white rounded p-1 border border-gray-200">
+                {/* POS: Large touch targets for quantity controls */}
+                <div className="flex justify-between items-center bg-card rounded p-1 border border-border">
                     <div className="flex items-center gap-3">
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-gray-400 hover:text-gray-900 hover:bg-gray-100"
+                            className="h-10 w-10 text-muted-foreground hover:text-foreground hover:bg-muted"
                             onClick={() => updateQuantity(item.cartId, item.quantity - 1)}
                         >
                             <Minus className="h-4 w-4" />
                         </Button>
-                        <span className="font-mono font-bold text-gray-900 w-6 text-center">
+                        <span className="font-mono font-bold text-foreground w-6 text-center">
                             {item.quantity}
                         </span>
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-gray-400 hover:text-gray-900 hover:bg-gray-100"
+                            className="h-10 w-10 text-muted-foreground hover:text-foreground hover:bg-muted"
                             onClick={() => updateQuantity(item.cartId, item.quantity + 1)}
                         >
                             <Plus className="h-4 w-4" />
@@ -277,7 +279,7 @@ const CartItemRow = memo(
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-red-500 hover:bg-red-900/20 hover:text-red-400"
+                        className="h-10 w-10 text-destructive hover:bg-destructive/10 hover:text-destructive"
                         onClick={() => removeItem(item.cartId)}
                     >
                         <Trash2 className="h-4 w-4" />

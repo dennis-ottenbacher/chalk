@@ -62,37 +62,13 @@ export default function SavedCartsManager() {
     const handleRestore = async (cart: SavedCart) => {
         startTransition(async () => {
             try {
-                // Restore items to cart
-                // Clear current cart first? Or append? usually restore means "this is the cart now".
-                // I'll clear first to be safe and avoid mixing.
                 clearCart()
 
-                // Add items back
-                // We need to loop because addItem takes single product and handles quantity internally?
-                // Wait, addItem logic: checks existing and increments.
-                // Our CartItem has quantity.
-                // If we use addItem, we might need to call it quantity times OR update store to accept bulk add / set.
-                // Looking at internal store:
-                // addItem: (product) => ... checks if existing ... set quantity + 1.
-                // This is inefficient for restoring quantity=10.
-                // But CartItem extends Product.
-                // I should probably manually "set items" if store allowed it, but it doesn't expose `setItems`.
-                // It exposes `addItem`.
-                // I will modify the store or just loop efficiently?
-                // Looping 50 times for 50 items is bad.
-                // I'll check store again.
-                // It just uses `set`. I can maybe add `restoreCart` to store later.
-                // For now, I'll loop `addItem` but `addItem` implementation in store finds by id every time.
-                // For MVP it's fine.
-
                 cart.items.forEach(product => {
-                    // addItem increments by 1. So we call it product.quantity times
-                    // faster way: just call it once then updateQuantity
                     addItem(product)
                     useCartStore.getState().updateQuantity(product.id, product.quantity)
                 })
 
-                // Remove from saved
                 await deleteSavedCart(cart.id)
 
                 setIsListOpen(false)
@@ -121,24 +97,24 @@ export default function SavedCartsManager() {
             <AlertDialog open={isSaveOpen} onOpenChange={setIsSaveOpen}>
                 <Button
                     variant="outline"
-                    className="border-gray-200 hover:bg-gray-100 text-gray-700 shadow-sm"
+                    className="border-border hover:bg-muted text-foreground shadow-sm"
                     disabled={items.length === 0}
                     onClick={() => setIsSaveOpen(true)}
                 >
                     <Save className="h-4 w-4 mr-2" />
                     Park
                 </Button>
-                <AlertDialogContent className="bg-white border-gray-200 text-gray-900 shadow-xl">
+                <AlertDialogContent className="bg-card border-border text-foreground shadow-xl">
                     <AlertDialogHeader>
                         <AlertDialogTitle>Park Current Cart</AlertDialogTitle>
-                        <AlertDialogDescription className="text-gray-500">
+                        <AlertDialogDescription className="text-muted-foreground">
                             Give this cart a name to retrieve it later.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <div className="py-4">
                         <Input
                             placeholder="Member Name / Table Number"
-                            className="bg-white border-gray-200 text-gray-900"
+                            className="bg-card border-border text-foreground"
                             value={cartName}
                             onChange={e => setCartName(e.target.value)}
                             onKeyDown={e => {
@@ -148,11 +124,11 @@ export default function SavedCartsManager() {
                         />
                     </div>
                     <AlertDialogFooter>
-                        <AlertDialogCancel className="bg-gray-100 text-gray-900 hover:bg-gray-200 border-gray-200">
+                        <AlertDialogCancel className="bg-muted text-foreground hover:bg-accent border-border">
                             Cancel
                         </AlertDialogCancel>
                         <Button
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                            className="bg-success hover:bg-success/90 text-success-foreground"
                             onClick={handleSave}
                             disabled={!cartName.trim() || loading}
                         >
@@ -166,7 +142,7 @@ export default function SavedCartsManager() {
             <AlertDialog open={isListOpen} onOpenChange={setIsListOpen}>
                 <Button
                     variant={savedCarts.length > 0 ? 'outline' : 'ghost'}
-                    className={`${savedCarts.length > 0 ? 'border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 shadow-sm' : 'text-gray-500'}`}
+                    className={`${savedCarts.length > 0 ? 'border-warning/50 text-warning hover:bg-warning/10 hover:text-warning shadow-sm' : 'text-muted-foreground'}`}
                     onClick={() => {
                         fetchSavedCarts()
                         setIsListOpen(true)
@@ -185,34 +161,36 @@ export default function SavedCartsManager() {
                 </Button>
                 <AlertDialogContent
                     size="2xl"
-                    className="bg-white border-gray-200 text-gray-900 max-h-[85vh] flex flex-col shadow-xl"
+                    className="bg-card border-border text-foreground max-h-[85vh] flex flex-col shadow-xl"
                 >
                     <AlertDialogHeader>
                         <AlertDialogTitle>Saved Carts</AlertDialogTitle>
-                        <AlertDialogDescription className="text-gray-500">
+                        <AlertDialogDescription className="text-muted-foreground">
                             Select a cart to restore and checkout.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
 
                     <div className="flex-1 overflow-y-auto py-4 space-y-3">
                         {savedCarts.length === 0 && (
-                            <div className="text-center text-gray-500 py-10">No saved carts.</div>
+                            <div className="text-center text-muted-foreground py-10">
+                                No saved carts.
+                            </div>
                         )}
                         {savedCarts.map(cart => (
                             <div
                                 key={cart.id}
-                                className="bg-gray-50 rounded-lg p-4 border border-gray-200 flex justify-between items-center gap-4"
+                                className="bg-muted rounded-lg p-4 border border-border flex justify-between items-center gap-4"
                             >
                                 <div className="space-y-1">
-                                    <div className="font-bold text-gray-900 text-lg flex items-center gap-2">
+                                    <div className="font-bold text-foreground text-lg flex items-center gap-2">
                                         {cart.name}
-                                        <span className="text-xs font-normal text-gray-500 bg-white px-2 py-0.5 rounded-full border border-gray-200">
+                                        <span className="text-xs font-normal text-muted-foreground bg-card px-2 py-0.5 rounded-full border border-border">
                                             {new Intl.DateTimeFormat('de-DE', {
                                                 timeStyle: 'short',
                                             }).format(new Date(cart.created_at))}
                                         </span>
                                     </div>
-                                    <div className="text-sm text-gray-500">
+                                    <div className="text-sm text-muted-foreground">
                                         {cart.items.reduce((acc, item) => acc + item.quantity, 0)}{' '}
                                         items • €
                                         {cart.items
@@ -222,7 +200,7 @@ export default function SavedCartsManager() {
                                             )
                                             .toFixed(2)}
                                     </div>
-                                    <div className="text-xs text-gray-500 line-clamp-1">
+                                    <div className="text-xs text-muted-foreground line-clamp-1">
                                         {cart.items.map(i => i.name).join(', ')}
                                     </div>
                                 </div>
@@ -230,7 +208,7 @@ export default function SavedCartsManager() {
                                     <Button
                                         size="sm"
                                         variant="default"
-                                        className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                                        className="bg-success hover:bg-success/90 text-success-foreground"
                                         onClick={() => handleRestore(cart)}
                                         disabled={isPending}
                                     >
@@ -244,7 +222,7 @@ export default function SavedCartsManager() {
                                     <Button
                                         size="icon"
                                         variant="ghost"
-                                        className="text-gray-400 hover:text-red-600 hover:bg-red-50"
+                                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
                                         onClick={() => handleDelete(cart.id)}
                                         disabled={isPending || loading}
                                     >
@@ -256,7 +234,7 @@ export default function SavedCartsManager() {
                     </div>
 
                     <AlertDialogFooter>
-                        <AlertDialogCancel className="bg-gray-100 text-gray-900 hover:bg-gray-200 border-gray-200">
+                        <AlertDialogCancel className="bg-muted text-foreground hover:bg-accent border-border">
                             Close
                         </AlertDialogCancel>
                     </AlertDialogFooter>

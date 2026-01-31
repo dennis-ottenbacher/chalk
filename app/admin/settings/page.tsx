@@ -1,7 +1,9 @@
 import { getSettings } from '@/app/actions/settings'
 import { getTseConfig } from '@/app/actions/tse'
+import { getPaymentConfig } from '@/app/actions/payment-settings'
 import SettingsForm from './settings-form'
 import TseSettings from '@/components/admin/tse-settings'
+import PaymentSettings from '@/components/admin/payment-settings'
 import VoucherValiditySettings from './voucher-validity-settings'
 
 import CompanySettingsForm from '@/components/admin/company-settings-form'
@@ -9,6 +11,7 @@ import CompanySettingsForm from '@/components/admin/company-settings-form'
 export default async function AdminSettingsPage() {
     const settings = await getSettings()
     const tseConfig = await getTseConfig()
+    const paymentConfig = await getPaymentConfig()
 
     return (
         <div className="space-y-6">
@@ -22,6 +25,11 @@ export default async function AdminSettingsPage() {
                     <SettingsForm initialSettings={settings} />
                     <VoucherValiditySettings initialSettings={settings} />
                 </div>
+            </div>
+
+            <div className="pt-6">
+                <h2 className="text-2xl font-bold tracking-tight mb-4">Zahlungen</h2>
+                <PaymentSettings initialConfig={paymentConfig} />
             </div>
 
             <div className="pt-6">

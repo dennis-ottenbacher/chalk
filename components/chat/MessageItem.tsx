@@ -1,9 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { formatDistanceToNow } from 'date-fns'
-import { de } from 'date-fns/locale'
-import { MessageSquare, Smile, Edit2, Trash2, MoreHorizontal, Image } from 'lucide-react'
+import { format } from 'date-fns'
+import {
+    MessageSquare,
+    Smile,
+    Edit2,
+    Trash2,
+    MoreHorizontal,
+    Image as ImageIcon,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -61,9 +67,8 @@ export function MessageItem({
     return (
         <div
             className={cn(
-                'group relative flex gap-3 px-2 py-1 rounded-lg transition-colors',
-                'hover:bg-gray-50',
-                !showAuthor && 'pl-12'
+                'group relative flex w-full mb-2',
+                isOwnMessage ? 'justify-end' : 'justify-start'
             )}
             onMouseEnter={() => setShowActions(true)}
             onMouseLeave={() => {
@@ -72,88 +77,114 @@ export function MessageItem({
                 setShowMoreMenu(false)
             }}
         >
-            {/* Avatar */}
-            {showAuthor && (
-                <Avatar className="h-8 w-8 flex-shrink-0">
-                    <AvatarImage src={message.user?.avatar_url || undefined} />
-                    <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
-                        {initials}
-                    </AvatarFallback>
-                </Avatar>
+            {/* Avatar (only for others) */}
+            {!isOwnMessage && (
+                <div className={cn('flex flex-col justify-end mr-2', !showAuthor && 'invisible')}>
+                    <Avatar className="h-8 w-8">
+                        <AvatarImage src={message.user?.avatar_url || undefined} />
+                        <AvatarFallback className="bg-muted text-muted-foreground text-xs">
+                            {initials}
+                        </AvatarFallback>
+                    </Avatar>
+                </div>
             )}
 
-            {/* Content */}
-            <div className="flex-1 min-w-0">
-                {/* Author & Time */}
-                {showAuthor && (
-                    <div className="flex items-baseline gap-2 mb-0.5">
-                        <span className="font-semibold text-sm text-gray-900">{userName}</span>
-                        <span className="text-xs text-gray-400">
-                            {formatDistanceToNow(new Date(message.created_at), {
-                                addSuffix: true,
-                                locale: de,
-                            })}
-                        </span>
-                        {message.is_edited && (
-                            <span className="text-xs text-gray-400">(bearbeitet)</span>
+            <div
+                className={cn(
+                    'flex flex-col max-w-[70%]',
+                    isOwnMessage ? 'items-end' : 'items-start'
+                )}
+            >
+                {/* Author Name (only for others and if showAuthor is true) */}
+                {!isOwnMessage && showAuthor && (
+                    <span className="text-xs text-muted-foreground ml-1 mb-1">{userName}</span>
+                )}
+
+                {/* Bubble */}
+                <div
+                    className={cn(
+                        'relative px-3 py-2 text-sm shadow-sm',
+                        isOwnMessage
+                            ? 'bg-primary text-primary-foreground rounded-2xl rounded-br-none'
+                            : 'bg-muted text-foreground rounded-2xl rounded-bl-none'
+                    )}
+                >
+                    {/* Message Content */}
+                    <p className="whitespace-pre-wrap break-words">{message.content}</p>
+
+                    {/* Attachments */}
+                    {message.attachments && message.attachments.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-2">
+                            {message.attachments.map(attachment => (
+                                <div key={attachment.id} className="relative group/attachment">
+                                    {attachment.file_type.startsWith('image/') ? (
+                                        <a
+                                            href={attachment.file_url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="block"
+                                        >
+                                            <img
+                                                src={attachment.file_url}
+                                                alt={attachment.file_name}
+                                                className="max-w-full max-h-60 rounded-lg"
+                                            />
+                                        </a>
+                                    ) : (
+                                        <a
+                                            href={attachment.file_url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className={cn(
+                                                'flex items-center gap-2 px-3 py-2 rounded-lg transition-colors',
+                                                isOwnMessage
+                                                    ? 'bg-primary-foreground/10 hover:bg-primary-foreground/20'
+                                                    : 'bg-background hover:bg-background/80'
+                                            )}
+                                        >
+                                            <ImageIcon className="h-4 w-4" />
+                                            <span className="truncate max-w-[150px]">
+                                                {attachment.file_name}
+                                            </span>
+                                        </a>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Metadata (Time & Edited) */}
+                    <div
+                        className={cn(
+                            'flex items-center gap-1 mt-1 text-[10px]',
+                            isOwnMessage
+                                ? 'text-primary-foreground/70 justify-end'
+                                : 'text-muted-foreground/70 justify-end'
                         )}
+                    >
+                        {message.is_edited && <span>(bearbeitet)</span>}
+                        <span>{format(new Date(message.created_at), 'HH:mm')}</span>
                     </div>
-                )}
-
-                {/* Message Content */}
-                <p className="text-sm text-gray-800 whitespace-pre-wrap break-words">
-                    {message.content}
-                </p>
-
-                {/* Attachments */}
-                {message.attachments && message.attachments.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-2">
-                        {message.attachments.map(attachment => (
-                            <div key={attachment.id} className="relative group/attachment">
-                                {attachment.file_type.startsWith('image/') ? (
-                                    <a
-                                        href={attachment.file_url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="block"
-                                    >
-                                        <img
-                                            src={attachment.file_url}
-                                            alt={attachment.file_name}
-                                            className="max-w-sm max-h-64 rounded-lg border border-gray-200 hover:border-blue-300 transition-colors"
-                                        />
-                                    </a>
-                                ) : (
-                                    <a
-                                        href={attachment.file_url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                                    >
-                                        <Image className="h-4 w-4 text-gray-500" />
-                                        <span className="text-sm text-gray-700 truncate max-w-xs">
-                                            {attachment.file_name}
-                                        </span>
-                                    </a>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-                )}
+                </div>
 
                 {/* Reactions */}
                 {Object.keys(reactionGroups).length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-2">
+                    <div
+                        className={cn(
+                            'flex flex-wrap gap-1 mt-1',
+                            isOwnMessage ? 'justify-end' : 'justify-start'
+                        )}
+                    >
                         {Object.entries(reactionGroups).map(([emoji, reactions]) => {
                             const hasUserReacted = reactions.some(r => r.user_id === currentUserId)
                             return (
                                 <button
                                     key={emoji}
                                     className={cn(
-                                        'flex items-center gap-1 px-2 py-0.5 rounded-full text-sm transition-colors',
+                                        'flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs transition-colors border shadow-sm',
                                         hasUserReacted
-                                            ? 'bg-blue-100 border border-blue-300 text-blue-700'
-                                            : 'bg-gray-100 border border-gray-200 hover:bg-gray-200'
+                                            ? 'bg-blue-100 border-blue-200 text-blue-700 dark:bg-blue-900/30 dark:border-blue-800 dark:text-blue-300'
+                                            : 'bg-background border-border text-foreground hover:bg-muted'
                                     )}
                                     onClick={() => {
                                         if (hasUserReacted) {
@@ -164,20 +195,20 @@ export function MessageItem({
                                     }}
                                 >
                                     <span>{emoji}</span>
-                                    <span className="text-xs font-medium">{reactions.length}</span>
+                                    <span className="font-medium">{reactions.length}</span>
                                 </button>
                             )
                         })}
                     </div>
                 )}
 
-                {/* Thread indicator */}
+                {/* Thread Link */}
                 {message.reply_count > 0 && (
                     <button
-                        className="mt-2 flex items-center gap-1 text-blue-600 hover:text-blue-700 text-sm transition-colors"
+                        className="mt-1 flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
                         onClick={() => onThreadClick(message)}
                     >
-                        <MessageSquare className="h-4 w-4" />
+                        <MessageSquare className="h-3 w-3" />
                         <span>
                             {message.reply_count}{' '}
                             {message.reply_count === 1 ? 'Antwort' : 'Antworten'}
@@ -186,20 +217,74 @@ export function MessageItem({
                 )}
             </div>
 
-            {/* Action buttons (show on hover) */}
+            {/* Action Buttons (Hover) */}
             {showActions && (
-                <div className="absolute -top-3 right-2 flex items-center gap-0.5 bg-white border border-gray-200 rounded-lg shadow-sm p-0.5">
-                    {/* Reaction picker */}
-                    <div className="relative">
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-7 w-7 p-0"
-                            onClick={() => setShowReactionPicker(!showReactionPicker)}
-                        >
-                            <Smile className="h-4 w-4" />
-                        </Button>
-                        {showReactionPicker && (
+                <div
+                    className={cn(
+                        'absolute top-0 flex items-center gap-0.5 bg-background border border-border rounded-lg shadow-sm p-0.5 z-10',
+                        isOwnMessage ? 'right-full mr-2' : 'left-full ml-2'
+                    )}
+                >
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0 hover:bg-muted"
+                        onClick={() => setShowReactionPicker(!showReactionPicker)}
+                    >
+                        <Smile className="h-3.5 w-3.5 text-muted-foreground" />
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0 hover:bg-muted"
+                        onClick={() => onThreadClick(message)}
+                    >
+                        <MessageSquare className="h-3.5 w-3.5 text-muted-foreground" />
+                    </Button>
+
+                    {isOwnMessage && (
+                        <>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0 hover:bg-muted"
+                                onClick={() => setShowMoreMenu(!showMoreMenu)}
+                            >
+                                <MoreHorizontal className="h-3.5 w-3.5 text-muted-foreground" />
+                            </Button>
+                            {showMoreMenu && (
+                                <div className="absolute top-full right-0 mt-1 bg-popover border border-border rounded-md shadow-md py-1 z-50 min-w-32">
+                                    {onEdit && (
+                                        <button
+                                            className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-foreground hover:bg-muted"
+                                            onClick={() => {
+                                                onEdit(message)
+                                                setShowMoreMenu(false)
+                                            }}
+                                        >
+                                            <Edit2 className="h-3 w-3" />
+                                            Bearbeiten
+                                        </button>
+                                    )}
+                                    {onDelete && (
+                                        <button
+                                            className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-destructive hover:bg-destructive/10"
+                                            onClick={() => {
+                                                onDelete(message.id)
+                                                setShowMoreMenu(false)
+                                            }}
+                                        >
+                                            <Trash2 className="h-3 w-3" />
+                                            Löschen
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+                        </>
+                    )}
+
+                    {showReactionPicker && (
+                        <div className="absolute top-full left-0 pt-2 z-50">
                             <ReactionPicker
                                 onSelect={emoji => {
                                     onReaction(message.id, emoji)
@@ -207,58 +292,6 @@ export function MessageItem({
                                 }}
                                 onClose={() => setShowReactionPicker(false)}
                             />
-                        )}
-                    </div>
-
-                    {/* Thread reply */}
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-7 w-7 p-0"
-                        onClick={() => onThreadClick(message)}
-                    >
-                        <MessageSquare className="h-4 w-4" />
-                    </Button>
-
-                    {/* More actions for own messages */}
-                    {isOwnMessage && (
-                        <div className="relative">
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-7 w-7 p-0"
-                                onClick={() => setShowMoreMenu(!showMoreMenu)}
-                            >
-                                <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                            {showMoreMenu && (
-                                <div className="absolute top-full right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-10 min-w-32">
-                                    {onEdit && (
-                                        <button
-                                            className="flex items-center gap-2 w-full px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100"
-                                            onClick={() => {
-                                                onEdit(message)
-                                                setShowMoreMenu(false)
-                                            }}
-                                        >
-                                            <Edit2 className="h-3.5 w-3.5" />
-                                            Bearbeiten
-                                        </button>
-                                    )}
-                                    {onDelete && (
-                                        <button
-                                            className="flex items-center gap-2 w-full px-3 py-1.5 text-sm text-red-600 hover:bg-red-50"
-                                            onClick={() => {
-                                                onDelete(message.id)
-                                                setShowMoreMenu(false)
-                                            }}
-                                        >
-                                            <Trash2 className="h-3.5 w-3.5" />
-                                            Löschen
-                                        </button>
-                                    )}
-                                </div>
-                            )}
                         </div>
                     )}
                 </div>

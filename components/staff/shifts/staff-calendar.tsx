@@ -285,7 +285,7 @@ export function StaffCalendar({ myShifts, openShifts }: StaffCalendarProps) {
                                 </div>
                             </div>
                             {selectedShift.notes && (
-                                <div className="bg-yellow-50 dark:bg-yellow-900/10 p-2 rounded text-sm text-yellow-800 dark:text-yellow-200 border border-yellow-100 dark:border-yellow-900/20">
+                                <div className="bg-warning/10 p-2 rounded text-sm text-warning border border-warning/20">
                                     <span className="block font-semibold text-xs mb-1 opacity-70">
                                         Notizen:
                                     </span>

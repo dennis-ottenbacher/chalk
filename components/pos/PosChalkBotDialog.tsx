@@ -21,7 +21,7 @@ export default function PosChalkBotDialog() {
             <AlertDialogTrigger asChild>
                 <Button
                     variant="outline"
-                    className="border-gray-200 hover:bg-gray-100 text-gray-700 gap-2 shadow-sm"
+                    className="border-border hover:bg-muted text-foreground gap-2 shadow-sm"
                 >
                     <Bot className="h-4 w-4" />
                     Chalk Bot
@@ -29,18 +29,18 @@ export default function PosChalkBotDialog() {
             </AlertDialogTrigger>
             <AlertDialogContent
                 size="3xl"
-                className="bg-white border-gray-200 text-gray-900 h-[80vh] flex flex-col p-0 gap-0 shadow-xl"
+                className="bg-card border-border text-foreground h-[80vh] flex flex-col p-0 gap-0 shadow-xl"
             >
-                <AlertDialogHeader className="flex flex-row items-center justify-between space-y-0 p-4 border-b border-gray-200">
+                <AlertDialogHeader className="flex flex-row items-center justify-between space-y-0 p-4 border-b border-border">
                     <AlertDialogTitle className="text-xl flex items-center gap-2">
-                        <Bot className="h-5 w-5 text-blue-600" />
+                        <Bot className="h-5 w-5 text-primary" />
                         Chalk Bot
                     </AlertDialogTitle>
                     <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => setIsOpen(false)}
-                        className="h-8 w-8 text-gray-400 hover:text-gray-900 hover:bg-gray-100"
+                        className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted"
                     >
                         <X className="h-4 w-4" />
                     </Button>

@@ -19,27 +19,27 @@ export function ChannelHeader({
 }: ChannelHeaderProps) {
     if (!channel) {
         return (
-            <div className="h-16 border-b border-gray-200 bg-white flex items-center px-4">
-                <span className="text-gray-500">Wähle einen Channel aus</span>
+            <div className="h-16 border-b border-border bg-card flex items-center px-4">
+                <span className="text-muted-foreground">Wähle einen Channel aus</span>
             </div>
         )
     }
 
     return (
-        <div className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-4">
+        <div className="h-16 border-b border-border bg-card flex items-center justify-between px-4">
             <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2">
                     {channel.is_private ? (
-                        <Lock className="h-5 w-5 text-gray-500" />
+                        <Lock className="h-5 w-5 text-muted-foreground" />
                     ) : (
-                        <Hash className="h-5 w-5 text-gray-500" />
+                        <Hash className="h-5 w-5 text-muted-foreground" />
                     )}
-                    <h1 className="font-semibold text-lg text-gray-900">{channel.name}</h1>
+                    <h1 className="font-semibold text-lg text-foreground">{channel.name}</h1>
                 </div>
                 {channel.description && (
                     <>
-                        <div className="h-4 w-px bg-gray-300" />
-                        <span className="text-sm text-gray-500 truncate max-w-md">
+                        <div className="h-4 w-px bg-border" />
+                        <span className="text-sm text-muted-foreground truncate max-w-md">
                             {channel.description}
                         </span>
                     </>
